@@ -111,6 +111,7 @@ def register():
     # go to registration page/form for GET requests
     else:
         return render_template("register.html")
+
     
 '''
 # Register
