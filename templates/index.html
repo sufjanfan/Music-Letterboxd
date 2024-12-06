@@ -1,13 +1,17 @@
 {% extends "layout.html" %}
 
-{% block content %}
+{% block title %}
+    Homepage
+{% endblock %}
+
+{% block main %}
 <div class="title-container">
     <h1 class="space-mono-regular" style="font-size: 30px">welcome to</h1>
     <br>
     <h1 class="syne" style="line-height: 0.7">Musicboxd</h1>
     <h1 class="syne" style="opacity: 0.4; line-height: 0.7">Musicboxd</h1>
     <h1 class="syne" style="opacity: 0.2; line-height: 0.7">Musicboxd</h1>
- </div>
+</div>
     <p>Rate and review your favorite songs.</p>
     {% if not session.get("user_id") %}
         <a href="/login" class="btn">Login</a>
