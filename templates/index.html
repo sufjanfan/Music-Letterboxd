@@ -1,34 +1,13 @@
 {% extends "layout.html" %}
 
-
-{% block main %}
-   <div class="title-container">
-      <h1 class="space-mono-regular" style="font-size: 30px">welcome to</h1>
-      <br>
-      <h1 class="syne" style="line-height: 0.7">Musicboxd</h1>
-      <h1 class="syne" style="opacity: 0.4; line-height: 0.7">Musicboxd</h1>
-      <h1 class="syne" style="opacity: 0.2; line-height: 0.7">Musicboxd</h1>
-   </div>
-
-
-   {% if logged_in %}
-      <h2>Redirecting to your profile...</h2>
-      <p>Loading your playlists and recent tracks...</p>
-
-      <a href="/logout">Log Out</a>
-
-   {% else %}
-      If not logged in, show the login button
-      <h2>find your musical compatibility!</h2>
-      <br>
-      <a href="{{ auth_url }}" class="btn-login">sign in with Spotify</a>
-   {% endif %}
-
-{% endblock %}
-
 {% block content %}
-<div class="welcome-container">
-    <h1>Welcome to Song Review App</h1>
+<div class="title-container">
+    <h1 class="space-mono-regular" style="font-size: 30px">welcome to</h1>
+    <br>
+    <h1 class="syne" style="line-height: 0.7">Musicboxd</h1>
+    <h1 class="syne" style="opacity: 0.4; line-height: 0.7">Musicboxd</h1>
+    <h1 class="syne" style="opacity: 0.2; line-height: 0.7">Musicboxd</h1>
+ </div>
     <p>Rate and review your favorite songs.</p>
     {% if not session.get("user_id") %}
         <a href="/login" class="btn">Login</a>
