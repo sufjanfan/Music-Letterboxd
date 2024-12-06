@@ -11,9 +11,19 @@ Session(app)
 
 db = SQL("sqlite:///songs.db")
 
-@app.route("/")
+@app.route("/", methods=["GET"])
 def index():
-    songs = db.execute("SELECT * FROM songs")
+    query = request.args.get("q")
+    if query:
+        # Perform a case-insensitive search in the database
+        songs = db.execute(
+            "SELECT * FROM songs WHERE title LIKE ? OR artist LIKE ?",
+            f"%{query}%",
+            f"%{query}%"
+        )
+    else:
+        songs = None  # No search query, so no songs to display
+
     return render_template("index.html", songs=songs)
 
 @app.route("/register", methods=["GET", "POST"])
