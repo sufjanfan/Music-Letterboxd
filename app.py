@@ -9,6 +9,7 @@ import requests
 # Configure Flask app
 app = Flask(__name__)
 
+
 # Configure session
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
