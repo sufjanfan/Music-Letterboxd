@@ -2,7 +2,7 @@ from cs50 import SQL
 import requests
 
 # Initialize the database connection
-db = SQL("sqlite:///database.db")
+db = SQL("sqlite:///songs.db")
 
 def fetch_songs():
     # Fetch songs from MusicBrainz API
