@@ -4,7 +4,7 @@
 <div class="profile-container">
     <h2>Your Profile</h2>
 
-    <h3>Search Songs</h3>
+    <h3>Search Songs to Rate and Review</h3>
     <form action="/profile" method="post">
         <label for="query">Search:</label>
         <input type="text" name="query" id="query" placeholder="Enter song name" required>
@@ -36,7 +36,7 @@
         </ul>
     {% endif %}
 
-    
+
     <h3>Your Reviews</h3>
     {% if reviews %}
         <ul>
