@@ -1,7 +1,20 @@
 {% extends "layout.html" %}
 
+{% block title %}
+   Homepage
+{% endblock %}
+
 {% block body %}
+<div class="title-container">
+    <h1 class="space-mono-regular" style="font-size: 30px">welcome to</h1>
+    <br>
+    <h1 class="syne" style="line-height: 0.7">Musicboxd</h1>
+    <h1 class="syne" style="opacity: 0.4; line-height: 0.7">Musicboxd</h1>
+    <h1 class="syne" style="opacity: 0.2; line-height: 0.7">Musicboxd</h1>
+ </div>
+
 <h1>Search for Songs</h1>
+
 <form action="/" method="GET">
     <input type="text" name="q" placeholder="Search for a song or artist" required>
     <button type="submit">Search</button>
