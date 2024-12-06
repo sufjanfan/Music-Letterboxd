@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<h1>Song Reviews</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Artist</th>
+            <th>Rate and Review</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for song in songs %}
+        <tr>
+            <td>{{ song.title }}</td>
+            <td>{{ song.artist }}</td>
+            <td>
+                <form action="/rate" method="POST">
+                    <input type="hidden" name="song_id" value="{{ song.id }}">
+                    <label for="rating">Rating (1-5):</label>
+                    <input type="number" name="rating" min="1" max="5" required>
+                    <br>
+                    <textarea name="review" placeholder="Write your review..." required></textarea>
+                    <br>
+                    <button type="submit">Submit</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
