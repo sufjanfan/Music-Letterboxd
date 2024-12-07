@@ -334,10 +334,13 @@ def like_song():
         error_message = "Song not found."
         return render_template("song.html", error_message=error_message, song_id=song_id)
 
+    # Debugging: Check the values before executing the query
+    print(f"User ID: {session['user_id']}, Song ID: {song_id}")  # Debugging output
+
     # Check if the song is already liked by the user
     already_liked = db.execute(
         "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
-        (session["user_id"], song_id)
+        (session["user_id"], song_id)  # Ensure this is a tuple with two values
     )
 
     if len(already_liked) == 0:
@@ -349,6 +352,7 @@ def like_song():
 
     db.commit()  # Save the change
     return redirect(f"/song/{song_id}")
+
 
 
 @app.route("/all_liked")
