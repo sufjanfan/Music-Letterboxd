@@ -262,17 +262,13 @@ def search():
 @app.route("/song/<song_id>")
 def song_details(song_id):
     try:
-        # Fetch song details from MusicBrainz API
-        response = requests.get(f"https://musicbrainz.org/ws/2/recording/{song_id}?fmt=json")
-        if response.status_code != 200:
-            print(response.text)  # Debugging
-            error_message = "MusicBrainz API error."
-            return render_template("song.html", error_message=error_message)
+        # Fetch song details from Spotify API using song_id
+        song = sp.track(song_id)
 
-        song = response.json()
-
-        # Fetch reviews from the database
-        reviews = db.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", song_id)
+        # Fetch reviews from your database
+        conn = get_db_connection()
+        reviews = conn.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", (song_id,)).fetchall()
+        conn.close()
 
         # Calculate average rating
         ratings = [review["rating"] for review in reviews]
@@ -285,7 +281,7 @@ def song_details(song_id):
         return render_template("song.html", error_message=error_message)
 
 
-@app.route("/song/<song_id>/review")
+@app.route("/song/<song_id>/review", methods=["POST"])
 @login_required
 def add_review(song_id):
     try:
@@ -295,23 +291,28 @@ def add_review(song_id):
 
         if not review_text or not rating:
             error_message = "All fields are required."
-            return render_template("song.html", error_message=error_message)
+            return render_template("song.html", error_message=error_message, song_id=song_id)
 
         if not rating.isdigit() or not (1 <= int(rating) <= 5):
             error_message = "Rating must be a number between 1 and 5."
-            return render_template("song.html", error_message=error_message)
+            return render_template("song.html", error_message=error_message, song_id=song_id)
 
         # Insert review into the database
-        db.execute(
+        conn = get_db_connection()
+        conn.execute(
             "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
-            session["user_id"], song_id, review_text, int(rating)
+            (session["user_id"], song_id, review_text, int(rating))
         )
+        conn.commit()
+        conn.close()
+
         return redirect(f"/song/{song_id}")
 
     except Exception as e:
         print(f"Error: {e}")  # Debugging
         error_message = "An error occurred while submitting your review."
-        return render_template("profile.html", error_message=error_message)
+        return render_template("song.html", error_message=error_message, song_id=song_id)
+
 
 @app.route("/recent")
 @login_required

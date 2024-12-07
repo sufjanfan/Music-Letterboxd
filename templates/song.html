@@ -1,48 +1,39 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Song Search
+    Song Details
 {% endblock %}
 
 {% block main %}
-    <div class="search-container">
-        <h1 class="syne">{{ song['title'] }}</h1>
-    </div>
-    <h2>Artist: {{ artist_name }}</h2>
-    <br>
-    <h2>Average Rating: {{ average_rating or 'No ratings yet' }}</h2>
-    <br>
+    <div class="song-container">
+        <h1 class="syne">{{ song['name'] }}</h1>
+        <h2>Artist: {{ song['artists'][0]['name'] }}</h2>
+        <h3>Album: {{ song['album']['name'] }}</h3>
+        <h4>Average Rating: {{ average_rating or 'No ratings yet' }}</h4>
 
-    <form action="/like" method="post">
-        <input type="hidden" name="song_id" value="{{ song.id }}">
-        <button type="submit">Like</button>
-    </form>
-
-
-    <h2>Reviews</h2>
+        <h2>Reviews</h2>
         <ul>
-        {% for review in reviews %}
-            <li>{{ review['username'] }}: {{ review['review'] }} (Rating: {{ review['rating'] }})</li>
-        {% endfor %}
+            {% for review in reviews %}
+                <li>{{ review.username }}: {{ review.review }} (Rating: {{ review.rating }})</li>
+            {% endfor %}
         </ul>
-    <br>
 
-    <h2>Submit a Review</h2>
-    <form action="/song/{{ song['id'] }}/review" method="post">
-        <div class="mb-3">
-            <textarea autocomplete="off" class="form-control mx-auto w-auto" name="review" placeholder="Your review" rows=""4></textarea>
-        </div>
-        <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" min="1" max="5" name="rating" placeholder="-" type="number">
-        </div>
-        <button class="btn btn-primary" type="submit">Submit</button>
-    </form>
+        <h2>Submit a Review</h2>
+        <form action="/song/{{ song.id }}/review" method="post">
+            <div class="mb-3">
+                <textarea autocomplete="off" class="form-control mx-auto w-auto" name="review" placeholder="Your review" rows="4"></textarea>
+            </div>
+            <div class="mb-3">
+                <input autocomplete="off" class="form-control mx-auto w-auto" min="1" max="5" name="rating" placeholder="Rating (1-5)" type="number" required>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit Review</button>
+        </form>
 
-    <br>
-    {% if error_message %}
-        <div class="alert alert-danger" role="alert">
-            {{ error_message }}
-        </div>
-    {% endif %}
-
+        <br>
+        {% if error_message %}
+            <div class="alert alert-danger" role="alert">
+                {{ error_message }}
+            </div>
+        {% endif %}
+    </div>
 {% endblock %}
