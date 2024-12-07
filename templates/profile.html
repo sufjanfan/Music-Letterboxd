@@ -13,10 +13,11 @@
         <h1>Your Liked Songs</h1>
         {% if songs %}
             <ul>
-                {% for song in songs %}
+                {% for song in songs|slice(':5') %}
                     <li>{{ song.name }} by {{ song.artist }}</li>
                 {% endfor %}
             </ul>
+            <a href="liked_songs.html">View All Liked Songs</a>
         {% else %}
             <p>You haven't liked any songs yet.</p>
         {% endif %}
