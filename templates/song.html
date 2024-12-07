@@ -18,7 +18,7 @@
 
             <form action="/like" method="post" id="like-form">
                 <input type="hidden" name="song_id" value="{{ song['id'] }}">
-                <button type="submit" class="like-btn">
+                <button type="submit" class="btn">
                     <i class="heart-icon {% if song_liked %}filled{% endif %}"></i>
                 </button>
             </form>
