@@ -228,28 +228,26 @@ def search():
     return render_template("search.html")
 
 
-
 @app.route("/song/<song_id>")
 def song_details(song_id):
-    try:
-        # Fetch song details from MusicBrainz API
-        response = requests.get(f"https://musicbrainz.org/ws/2/recording/{song_id}?fmt=json")
-        if response.status_code != 200:
-            print(response.text)  # Debugging
-            return apology("MusicBrainz API error")
+    response = requests.get(f"https://musicbrainz.org/ws/2/recording/{song_id}?fmt=json")
+    if response.status_code != 200:
+        return apology("MusicBrainz API error")
 
-        song = response.json()
-        # Fetch reviews from the database
-        reviews = db.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", song_id)
+    song = response.json()
+    # Insert song into the database if it doesn't already exist
+    db.execute(
+        "INSERT OR IGNORE INTO songs (id, title, artist) VALUES (?, ?, ?)",
+        song["id"], song["title"], song["artist"][0]["name"]
+    )
 
-        # Calculate average rating
-        ratings = [review["rating"] for review in reviews if "rating" in review]
-        average_rating = sum(ratings) / len(ratings) if ratings else None
+    reviews = db.execute(
+        "SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?",
+        song_id
+    )
+    average_rating = sum([review["rating"] for review in reviews]) / len(reviews) if reviews else None
 
-        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
-    except Exception as e:
-        print(f"Error: {e}")  # Debugging
-        return apology("An unexpected error occurred")
+    return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
 
 @app.route("/song/<song_id>/review", methods=["POST"])
 @login_required
@@ -257,9 +255,16 @@ def add_review(song_id):
     review_text = request.form.get("review")
     rating = request.form.get("rating")
 
+    # Validate input fields
     if not review_text or not rating:
         return apology("must fill all fields")
 
+    # Ensure song_id exists in the database
+    song = db.execute("SELECT * FROM songs WHERE id = ?", song_id)
+    if not song:
+        return apology("Song not found")
+
+    # Insert review
     db.execute(
         "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
         session["user_id"], song_id, review_text, rating
