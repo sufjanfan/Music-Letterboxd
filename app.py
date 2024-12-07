@@ -467,18 +467,7 @@ def like_song():
     # Insert the like into the database
     db.execute("INSERT OR IGNORE INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
 
-    return jsonify({"message": "Song liked successfully", "song_id": song_id}), 200
-
-
-@app.route("/liked_songs")
-@login_required
-def liked_songs():
-        # Retrieve all liked songs for the current user
-        liked_songs = db.execute(
-            "SELECT songs.* FROM songs JOIN likes ON songs.id = likes.song_id WHERE likes.user_id = ?",
-            session["user_id"]
-        )
-        return render_template("liked_songs.html", songs=liked_songs)
+    return redirect(f"/song/{song_id}")
 
 
 if __name__ == "__main__":
