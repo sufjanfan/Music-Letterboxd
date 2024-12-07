@@ -135,6 +135,11 @@ def profile():
         "JOIN likes ON songs.id = likes.song_id WHERE likes.user_id = ?",
         session["user_id"]
     )
+     # Retrieve only the latest five reviews for display
+    reviews = db.execute(
+        "SELECT * FROM reviews WHERE user_id = ? ORDER BY id DESC LIMIT 5",
+        session["user_id"]
+    )
 
     # Pass data to the template
     return render_template("profile.html", name=username, reviews=reviews, songs=liked_songs)
@@ -229,8 +234,8 @@ def song_details(song_id):
             # Insert review into the database
             conn = get_db_connection()
             conn.execute(
-                "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
-                (session["user_id"], song_id, review_text, int(rating))
+                "INSERT INTO reviews (user_id, song_id, review, rating, song_title, song_artist) VALUES (?, ?, ?, ?, ?, ?)",
+                (session["user_id"], song_id, review_text, int(rating), song["name"], ", ".join([artist["name"] for artist in song["artists"]]))
             )
             conn.commit()
             conn.close()
@@ -254,6 +259,7 @@ def song_details(song_id):
         print(f"Error: {e}")  # Debugging
         error_message = "An unexpected error occurred while fetching song details."
         return render_template("song.html", error_message=error_message)
+
 
 @app.route("/song/<song_id>/review", methods=["POST"])
 @login_required
