@@ -23,7 +23,7 @@
     <h2>Submit a Review</h2>
     <form action="/song/{{ song['id'] }}/review" method="post">
         <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" name="review" placeholder="Your review" type="text">
+            <textarea autocomplete="off" class="form-control mx-auto w-auto" name="review" placeholder="Your review" rows=""4></textarea>
         </div>
         <div class="mb-3">
             <input autocomplete="off" class="form-control mx-auto w-auto" min="1" max="5" name="rating" placeholder="-" type="number">
