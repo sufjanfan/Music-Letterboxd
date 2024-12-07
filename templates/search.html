@@ -2,16 +2,14 @@
 
 {% block main %}
 
-    <form method="POST">
-        <div>
-            <label for="song_name">Song Name:</label>
-            <input type="text" name="song_name" id="song_name">
+    <form action="/search" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="song_name" placeholder="Song Name" type="text">
         </div>
-        <div>
-            <label for="artist">Artist:</label>
-            <input type="text" name="artist" id="artist">
+        <div class="mb-3">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="artist" placeholder="Artist" type="text">
         </div>
-        <button type="submit">Search</button>
+        <button class="btn btn-primary" type="submit">Search</button>
     </form>
 
 {% if songs %}
