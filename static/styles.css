@@ -21,6 +21,14 @@ ul {
     list-style-type: none;
 }
 
+nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 nav .navbar-brand {
     font-size: xx-large;
     font-family: "Space Mono";
@@ -45,8 +53,12 @@ nav .navbar-brand {
 
 body {
     font-family: "Space Mono";
+    overflow: visible;
 }
 
+header {
+    overflow: visible;  /* Ensure header doesn't clip its content */
+}
 
 
 /* Fonts */
