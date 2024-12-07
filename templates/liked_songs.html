@@ -1,28 +1,31 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<h1 class="syne">Liked Songs</h1>
+<div>
+    <h1 class="syne">your<br>liked songs</h1>
+    <br>
 
-{% if songs %}
-    <table class="table table-striped mt-4">
-        <thead class="table-light">
-            <tr>
-                <th scope="col">#</th>
-                <th scope="col">Song</th>
-                <th scope="col">Artist</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for song in songs %}
-            <tr>
-                <th scope="row">{{ loop.index }}</th>
-                <td>{{ song.name }}</td>
-                <td>{{ song.artist }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <p class="text-muted">You haven't liked any songs yet.</p>
-{% endif %}
+    {% if songs %}
+        <table class="table table-striped mt-4">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Song</th>
+                    <th scope="col">Artist</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in songs %}
+                <tr>
+                    <th scope="row">{{ loop.index }}</th>
+                    <td>{{ song.name }}</td>
+                    <td>{{ song.artist }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="text-muted">You haven't liked any songs yet.</p>
+    {% endif %}
+</div>
 {% endblock %}
