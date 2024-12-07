@@ -21,6 +21,7 @@
                     });
                 });
             });
+
             function likeSong(songId) {
                 console.log("clicked!");  // Confirm click event is triggered
 
@@ -28,33 +29,38 @@
                 var heartIcon = document.getElementById('heart-icon-' + songId);
                 console.log("heartIcon:", heartIcon);  // Ensure this is getting the correct element
 
-                fetch('/like', {
-                    method: 'POST',
-                    body: new URLSearchParams({
-                        song_id: songId
-                    }),
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log("Response Data:", data);  // Log the server's response
+                // Check if heartIcon exists
+                if (heartIcon) {
+                    fetch('/like', {
+                        method: 'POST',
+                        body: new URLSearchParams({
+                            song_id: songId
+                        }),
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log("Response Data:", data);  // Log the server's response
 
-                    // Check if the song was liked or unliked
-                    if (data.liked) {
-                        heartIcon.classList.remove('far', 'fa-heart');  // Remove empty heart
-                        heartIcon.classList.add('fa-heart');  // Add filled heart
-                        console.log("Song liked, updated icon to filled heart.");
-                    } else {
-                        heartIcon.classList.remove('fa-heart');  // Remove filled heart
-                        heartIcon.classList.add('far', 'fa-heart');  // Add empty heart
-                        console.log("Song unliked, updated icon to empty heart.");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+                        // Check if the song was liked or unliked
+                        if (data.liked) {
+                            heartIcon.classList.remove('far', 'fa-heart');  // Remove empty heart
+                            heartIcon.classList.add('fa-heart');  // Add filled heart
+                            console.log("Song liked, updated icon to filled heart.");
+                        } else {
+                            heartIcon.classList.remove('fa-heart');  // Remove filled heart
+                            heartIcon.classList.add('far', 'fa-heart');  // Add empty heart
+                            console.log("Song unliked, updated icon to empty heart.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+                } else {
+                    console.error('Heart icon not found!');
+                }
             }
 
 
