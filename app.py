@@ -373,7 +373,7 @@ def all_reviews():
         ORDER BY reviews.timestamp DESC
         """,
         (session["user_id"],))
-    return render_template("liked_songs.html", songs=liked_songs)
+    return render_template("all_reviews.html", reviews=reviews)
 
 
 
