@@ -130,7 +130,7 @@ header {
 }
 
 /* Empty heart */
-.far.fa-heart {
+.empty.fa-heart {
     color: #ccc; /* Light gray for empty heart */
 }
 
