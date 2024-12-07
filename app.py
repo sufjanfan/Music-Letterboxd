@@ -254,11 +254,19 @@ def search():
                 title = song['name']
                 artist_name = song['artists'][0]['name']
 
-                # Check if the song already exists in the database
-                existing_song = db.execute("SELECT * FROM songs WHERE id = ?", (song_id,))
-                if not existing_song:
-                    # Insert the song into the database if it doesn't exist
-                    db.execute("INSERT INTO songs (id, title, artist) VALUES (?, ?, ?)", (song_id, title, artist_name))
+                # Debugging output to ensure the values are correct
+                print(f"Inserting song: {song_id}, {title}, {artist_name}")
+
+                # Ensure the variables are correct
+                if song_id and title and artist_name:
+                    # Check if the song already exists in the database
+                    existing_song = db.execute("SELECT * FROM songs WHERE id = ?", (song_id,))
+                    if not existing_song:
+                        # Insert the song into the database if it doesn't exist
+                        db.execute("INSERT INTO songs (id, title, artist) VALUES (?, ?, ?)",
+                                   (song_id, title, artist_name))
+                else:
+                    print("Missing values for song, skipping insertion.")
 
         else:
             error_message = "No songs found matching the search."
@@ -336,46 +344,29 @@ def recent():
 def like_song():
     try:
         song_id = request.form.get("song_id")
-
         if not song_id:
-            return jsonify({"error": "Song ID is required."}), 400
+            return jsonify({"error": "Song ID is required"}), 400
 
         # Check if the song exists
         song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
         if not song:
-            return jsonify({"error": "Song does not exist."}), 404
+            return jsonify({"error": "Song not found"}), 404
 
-        # Check if the song is already liked by the user
-        existing_like = db.execute(
-            "SELECT * FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id
-        )
-        if existing_like:
-            return jsonify({"message": "Song already liked."}), 200
+        # Insert the like into the database
+        db.execute("INSERT OR IGNORE INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
 
-        # Add the like to the database
-        db.execute(
-            "INSERT INTO likes (user_id, song_id) VALUES (?, ?)",
-            session["user_id"], song_id
-        )
-        return jsonify({"message": "Song liked successfully!"}), 201
-    except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({"error": "An error occurred while liking the song."}), 500
+        return jsonify({"message": "Song liked successfully"}), 200
 
-
-@app.route("/liked-songs")
+@app.route("/liked_songs")
 @login_required
 def liked_songs():
     try:
-        # Fetch liked songs for the current user
+        # Retrieve all liked songs for the current user
         liked_songs = db.execute(
             "SELECT songs.* FROM songs JOIN likes ON songs.id = likes.song_id WHERE likes.user_id = ?",
             session["user_id"]
         )
-        return render_template("liked_songs.html", liked_songs=liked_songs)
-    except Exception as e:
-        print(f"Error: {e}")
-        return render_template("liked_songs.html", error_message="An error occurred while retrieving liked songs.")
+        return render_template("liked_songs.html", songs=liked_songs)
 
 
 if __name__ == "__main__":
