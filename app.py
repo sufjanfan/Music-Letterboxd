@@ -173,7 +173,7 @@ def logout():
     return redirect("/")
 
 # Profile
-@app.route("/profile", methods=["POST"])
+@app.route("/profile")
 @login_required
 def profile():
     # Get the user details (including the username) based on the session's user_id
@@ -247,6 +247,19 @@ def search():
 
         if results['tracks']['items']:
             songs = results['tracks']['items']
+
+            # Insert each song into the database if it doesn't already exist
+            for song in songs:
+                song_id = song['id']
+                title = song['name']
+                artist_name = song['artists'][0]['name']
+
+                # Check if the song already exists in the database
+                existing_song = db.execute("SELECT * FROM songs WHERE id = ?", (song_id,))
+                if not existing_song:
+                    # Insert the song into the database if it doesn't exist
+                    db.execute("INSERT INTO songs (id, title, artist) VALUES (?, ?, ?)", (song_id, title, artist_name))
+
         else:
             error_message = "No songs found matching the search."
             return render_template("search.html", error_message=error_message)
@@ -255,6 +268,7 @@ def search():
 
     # For GET requests, just render the empty search page
     return render_template("search.html")
+
 
 
 @app.route("/song/<song_id>")
@@ -316,6 +330,52 @@ def add_review(song_id):
 def recent():
     reviews = db.execute("SELECT * FROM reviews")
     return render_template("recent.html", reviews=reviews)
+
+@app.route("/like", methods=["POST"])
+@login_required
+def like_song():
+    try:
+        song_id = request.form.get("song_id")
+
+        if not song_id:
+            return jsonify({"error": "Song ID is required."}), 400
+
+        # Check if the song exists
+        song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
+        if not song:
+            return jsonify({"error": "Song does not exist."}), 404
+
+        # Check if the song is already liked by the user
+        existing_like = db.execute(
+            "SELECT * FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id
+        )
+        if existing_like:
+            return jsonify({"message": "Song already liked."}), 200
+
+        # Add the like to the database
+        db.execute(
+            "INSERT INTO likes (user_id, song_id) VALUES (?, ?)",
+            session["user_id"], song_id
+        )
+        return jsonify({"message": "Song liked successfully!"}), 201
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({"error": "An error occurred while liking the song."}), 500
+
+
+@app.route("/liked-songs")
+@login_required
+def liked_songs():
+    try:
+        # Fetch liked songs for the current user
+        liked_songs = db.execute(
+            "SELECT songs.* FROM songs JOIN likes ON songs.id = likes.song_id WHERE likes.user_id = ?",
+            session["user_id"]
+        )
+        return render_template("liked_songs.html", liked_songs=liked_songs)
+    except Exception as e:
+        print(f"Error: {e}")
+        return render_template("liked_songs.html", error_message="An error occurred while retrieving liked songs.")
 
 
 if __name__ == "__main__":
