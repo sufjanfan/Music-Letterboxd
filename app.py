@@ -257,13 +257,16 @@ def search():
     # For GET requests, just render the empty search page
     return render_template("search.html")
 
-
-
 @app.route("/song/<song_id>")
 def song_details(song_id):
     try:
         # Fetch song details from Spotify API using song_id
         song = sp.track(song_id)
+
+        # Check if the song data is returned as expected
+        if not song:
+            error_message = "Song not found."
+            return render_template("song.html", error_message=error_message)
 
         # Fetch reviews from your database
         conn = get_db_connection()
@@ -274,11 +277,14 @@ def song_details(song_id):
         ratings = [review["rating"] for review in reviews]
         average_rating = sum(ratings) / len(ratings) if ratings else None
 
+        # Render the song page with the retrieved song and reviews
         return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
+
     except Exception as e:
         print(f"Error: {e}")  # Debugging
-        error_message = "An unexpected error occurred."
+        error_message = "An unexpected error occurred while fetching song details."
         return render_template("song.html", error_message=error_message)
+
 
 
 @app.route("/song/<song_id>/review", methods=["POST"])
