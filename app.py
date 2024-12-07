@@ -443,19 +443,20 @@ def recent():
 @app.route("/like", methods=["POST"])
 @login_required
 def like_song():
-        song_id = request.form.get("song_id")
-        if not song_id:
-            return jsonify({"error": "Song ID is required"}), 400
+    song_id = request.form.get("song_id")
+    if not song_id:
+        return jsonify({"error": "Song ID is required"}), 400
 
-        # Check if the song exists
-        song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
-        if not song:
-            return jsonify({"error": "Song not found"}), 404
+    # Check if the song exists
+    song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
+    if not song:
+        return jsonify({"error": "Song not found"}), 404
 
-        # Insert the like into the database
-        db.execute("INSERT OR IGNORE INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
+    # Insert the like into the database
+    db.execute("INSERT OR IGNORE INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
 
-        return jsonify({"message": "Song liked successfully"}), 200
+    return jsonify({"message": "Song liked successfully", "song_id": song_id}), 200
+
 
 @app.route("/liked_songs")
 @login_required
