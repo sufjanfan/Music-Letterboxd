@@ -19,18 +19,29 @@
     </form>
 
     <br>
-    <ul>
-        {% if songs %}
-          {% for song in songs %}
-            <li>
-                <a href="{{ url_for('song_details', song_id=song.id) }}"><strong>{{ song.name }}</strong> by {{ song.artists[0].name }}</a>
-                <br>
-                <a href="{{ song.external_urls.spotify }}" target="_blank">Listen on Spotify</a>
-                <a href="{{ url_for('song_details', song_id=song.id) }}">Add Review</a>
-            </li>
-          {% endfor %}
-        {% endif %}
-    </ul>
+    {% if songs %}
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Song Name</th>
+                    <th>Artist</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for song in songs %}
+                    <tr>
+                        <td><a href="{{ url_for('song_details', song_id=song.id) }}"><strong>{{ song.name }}</strong></a></td>
+                        <td>{{ song.artists[0].name }}</td>
+                        <td>
+                            <a href="{{ song.external_urls.spotify }}" target="_blank">Listen on Spotify</a> |
+                            <a href="{{ url_for('song_details', song_id=song.id) }}">Add Review</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
 
     <br>
     {% if error_message %}
