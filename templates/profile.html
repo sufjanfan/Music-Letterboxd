@@ -16,6 +16,10 @@
             <ul>
                 {% for song in songs %}
                     <li>{{ song.name }} by {{ song.artist }}</li>
+                    <form action="{{ url_for('like_song') }}" method="post" style="display:inline;">
+                        <input type="hidden" name="song_id" value="{{ song.spotify_id }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Unlike</button>
+                    </form>
                 {% endfor %}
             </ul>
         {% else %}
@@ -37,6 +41,14 @@
                                 <p class="card-text"><strong>Rating:</strong> {{ review.rating }}</p>
                                 <p class="card-text">{{ review.review }}</p>
                                 <p class="card-text"><small class="text-muted">Reviewed on: {{ review.timestamp }}</small></p>
+
+                                <!-- Edit Review Button -->
+                                <a href="{{ url_for('edit_review', review_id=review.id) }}" class="btn btn-warning btn-sm">Edit</a>
+
+                                <!-- Delete Review Form -->
+                                <form action="{{ url_for('delete_review', review_id=review.id) }}" method="post" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
                             </div>
                         </div>
                     </div>

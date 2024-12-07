@@ -192,5 +192,5 @@ header {
 .stars-input input:checked ~ label,
 .stars-input label:hover,
 .stars-input label:hover ~ label {
-    color: #ffca28;
+    color: #000000;
 }

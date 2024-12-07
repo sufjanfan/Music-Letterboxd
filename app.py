@@ -130,25 +130,25 @@ def profile():
 
     reviews = db.execute(
         """
-        SELECT reviews.rating, reviews.timestamp, reviews.review,
-            songs.title AS song_title, songs.artist AS song_artist
+        SELECT reviews.id, reviews.rating, reviews.timestamp, reviews.review,
+        songs.title AS song_title, songs.artist AS song_artist
         FROM reviews
         JOIN songs ON reviews.song_id = songs.id
         WHERE reviews.user_id = ?
         ORDER BY reviews.timestamp DESC LIMIT 5
-        """,
-        (session["user_id"],)
-    )
+        """, session["user_id"]
+        )
 
     # reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
     # Fetch user's liked songs
     liked_songs = db.execute(
         """
-        SELECT songs.title AS name, songs.artist
+        SELECT songs.id AS spotify_id, songs.title AS name, songs.artist
         FROM songs
         JOIN likes ON songs.id = likes.song_id
         WHERE likes.user_id = ?
         ORDER BY likes.timestamp DESC LIMIT 5
+
         """,
         (session["user_id"],)
     )
@@ -351,6 +351,36 @@ def like_song():
     if len(already_liked) == 0:
         # If not liked yet, add the song to likes
         db.execute("INSERT INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
+    else:
+        # If already liked, remove it from likes (unlike)
+        db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
+
+    # Redirect back to the referring page
+    return redirect(request.referrer or "/profile")
+
+'''
+@app.route("/like", methods=["POST"])
+@login_required
+def like_song():
+    song_id = request.form.get("song_id")
+
+    if not song_id:
+        return jsonify({"error": "Song ID required."}), 400
+
+    # Check if the song exists
+    song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
+    if not song:
+        return jsonify({"error": "Song not found."}), 404
+
+    # Check if the song is already liked by the user
+    already_liked = db.execute(
+        "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
+        session["user_id"], song_id
+    )
+
+    if len(already_liked) == 0:
+        # If not liked yet, add the song to likes
+        db.execute("INSERT INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
         liked = True
     else:
         # If already liked, remove it from likes
@@ -359,17 +389,15 @@ def like_song():
 
     # Return a JSON response with the updated like status
     return jsonify({"liked": liked})
-
-
+'''
 
 @app.route("/all_liked")
 @login_required
 def all_liked():
     """Display a list of songs liked by the user."""
-    # Query the database to fetch the liked songs of the logged-in user
     liked_songs = db.execute(
         """
-        SELECT songs.title AS name, songs.artist
+        SELECT songs.id AS spotify_id, songs.title AS name, songs.artist
         FROM songs
         JOIN likes ON songs.id = likes.song_id
         WHERE likes.user_id = ?
@@ -378,6 +406,7 @@ def all_liked():
         (session["user_id"],)
     )
     return render_template("liked_songs.html", songs=liked_songs)
+
 
 @app.route("/all_reviews")
 @login_required
