@@ -54,13 +54,15 @@ nav .navbar-brand {
     background-color: #0056b3;
 }
 
-/* Additional styling for reviews */
+/* Card styling */
 .card {
     border: 1px solid #ddd; /* Light border for card */
     border-radius: 8px; /* Rounded corners */
     background-color: #f9f9f9; /* Light background */
+    transition: box-shadow 0.3s ease-in-out; /* Smooth transition for shadow */
 }
 
+/* Card body style */
 .card-body {
     padding: 20px;
 }
@@ -85,8 +87,9 @@ nav .navbar-brand {
     margin-bottom: 10px;
 }
 
-.shadow-sm {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for cards */
+/* Hover effect - Adds shadow when hovering over the card */
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light drop shadow on hover */
 }
 
 
