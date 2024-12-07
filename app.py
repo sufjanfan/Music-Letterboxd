@@ -225,7 +225,50 @@ def review():
         error_message = "An error occurred while submitting your review."
         return render_template("profile.html", error_message=error_message)
 '''
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    if request.method == "POST":
+        # Get song name and artist from the form
+        song_name = request.form.get("song_name")
+        artist = request.form.get("artist")
 
+        # Validate at least one field is filled
+        if not song_name and not artist:
+            error_message = "Must provide at least a song name or artist."
+            return render_template("search.html", error_message=error_message)
+
+        # Construct query for Spotify search
+        query = f"track:{song_name}" if song_name else ""
+        if artist:
+            query += f" artist:{artist}"
+
+        # Make the API request to Spotify
+        results = sp.search(q=query, type="track", limit=10)  # Limit to 10 results
+
+        if results['tracks']['items']:
+            songs = results['tracks']['items']
+
+            # Insert each song into the database
+            for song in songs:
+                song_id = song['id']
+                song_title = song['name']
+                song_artist = ", ".join([artist['name'] for artist in song['artists']])
+
+                # Use INSERT OR IGNORE to avoid duplicate entries
+                db.execute(
+                    "INSERT OR IGNORE INTO songs (id, title, artist) VALUES (?, ?, ?)",
+                    song_id, song_title, song_artist
+                )
+        else:
+            error_message = "No songs found matching the search."
+            return render_template("search.html", error_message=error_message)
+
+        return render_template("search.html", songs=songs)
+
+    # For GET requests, just render the empty search page
+    return render_template("search.html")
+
+'''
 @app.route("/search", methods=["GET", "POST"])
 def search():
     if request.method == "POST":
@@ -256,7 +299,62 @@ def search():
 
     # For GET requests, just render the empty search page
     return render_template("search.html")
+'''
 
+@app.route("/song/<song_id>", methods=["GET", "POST"])
+def song_details(song_id):
+    try:
+        # Fetch song details from Spotify API using song_id
+        song = sp.track(song_id)
+
+        # Check if the song data is returned as expected
+        if not song:
+            error_message = "Song not found."
+            return render_template("song.html", error_message=error_message)
+
+        # Fetch reviews from your database
+        conn = get_db_connection()
+        reviews = conn.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", (song_id,)).fetchall()
+
+        # Handle review submission if it's a POST request
+        if request.method == "POST":
+            review_text = request.form.get("review")
+            rating = request.form.get("rating")
+
+            if not review_text or not rating:
+                error_message = "All fields are required."
+                return render_template("song.html", error_message=error_message, song=song, reviews=reviews)
+
+            if not rating.isdigit() or not (1 <= int(rating) <= 5):
+                error_message = "Rating must be a number between 1 and 5."
+                return render_template("song.html", error_message=error_message, song=song, reviews=reviews)
+
+            # Insert review into the database
+            conn.execute(
+                "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
+                (session["user_id"], song_id, review_text, int(rating))
+            )
+            conn.commit()
+
+            # Re-fetch the reviews after insertion
+            reviews = conn.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", (song_id,)).fetchall()
+
+        conn.close()
+
+        # Calculate average rating
+        ratings = [review["rating"] for review in reviews]
+        average_rating = sum(ratings) / len(ratings) if ratings else None
+
+        # Render the song page with the retrieved song and reviews
+        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
+
+    except Exception as e:
+        print(f"Error: {e}")  # Debugging
+        error_message = "An unexpected error occurred while fetching song details."
+        return render_template("song.html", error_message=error_message)
+
+
+'''
 @app.route("/song/<song_id>")
 def song_details(song_id):
     try:
@@ -318,7 +416,7 @@ def add_review(song_id):
         print(f"Error: {e}")  # Debugging
         error_message = "An error occurred while submitting your review."
         return render_template("song.html", error_message=error_message, song_id=song_id)
-
+'''
 
 @app.route("/recent")
 @login_required
