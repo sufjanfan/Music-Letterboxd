@@ -29,8 +29,6 @@
                 <a href="{{ url_for('song_details', song_id=song.id) }}">Add Review</a>
             </li>
           {% endfor %}
-        {% else %}
-          <li>No songs found matching your search.</li>
         {% endif %}
     </ul>
 
