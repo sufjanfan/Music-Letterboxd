@@ -246,7 +246,7 @@ def song_details(song_id):
         ratings = [review["rating"] for review in reviews if "rating" in review]
         average_rating = sum(ratings) / len(ratings) if ratings else None
 
-        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
+        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating, artist_name=artist_name)
     except Exception as e:
         print(f"Error: {e}")  # Debugging
         return apology("An unexpected error occurred")

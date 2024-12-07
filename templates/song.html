@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<h1>{{ song['title'] }} by {{ song['artist'] }}</h1>
+<h1>{{ song['title'] }}</h1>
+<p>Artist: {{ artist_name }}</p>
 <p>Average Rating: {{ average_rating or 'No ratings yet' }}</p>
 
 <h2>Reviews</h2>
