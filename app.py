@@ -399,7 +399,7 @@ def song_details(song_id):
         print(f"Error: {e}")  # Debugging
         error_message = "An unexpected error occurred while fetching song details."
         return render_template("song.html", error_message=error_message)
-
+'''
 
 
 @app.route("/song/<song_id>/review", methods=["POST"])
@@ -433,7 +433,6 @@ def add_review(song_id):
         print(f"Error: {e}")  # Debugging
         error_message = "An error occurred while submitting your review."
         return render_template("song.html", error_message=error_message, song_id=song_id)
-'''
 
 @app.route("/recent")
 @login_required
