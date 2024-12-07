@@ -142,9 +142,14 @@ def profile():
     # reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
     # Fetch user's liked songs
     liked_songs = db.execute(
-        "SELECT songs.title AS name, songs.artist FROM songs "
-        "JOIN likes ON songs.id = likes.song_id WHERE likes.user_id = ?",
-        session["user_id"]
+        """
+        SELECT songs.title AS name, songs.artist
+        FROM songs
+        JOIN likes ON songs.id = likes.song_id
+        WHERE likes.user_id = ?
+        ORDER BY likes.id DESC LIMIT 5
+        """,
+        (session["user_id"],)
     )
 
     # Pass data to the template
