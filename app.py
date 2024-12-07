@@ -325,17 +325,31 @@ def recent():
 def like_song():
     song_id = request.form.get("song_id")
     if not song_id:
-        return jsonify({"error": "Song ID is required"}), 400
+        error_message = "Song ID required."
+        return render_template("song.html", error_message=error_message, song_id=song_id)
 
     # Check if the song exists
     song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
     if not song:
-        return jsonify({"error": "Song not found"}), 404
+        error_message = "Song not found."
+        return render_template("song.html", error_message=error_message, song_id=song_id)
 
-    # Insert the like into the database
-    db.execute("INSERT OR IGNORE INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
+    # Check if the song is already liked by the user
+    already_liked = db.execute(
+        "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
+        (session["user_id"], song_id)
+    )
 
+    if len(already_liked) == 0:
+        # If not liked yet, add the song to likes
+        db.execute("INSERT INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
+    else:
+        # If already liked, remove it from likes
+        db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
+
+    db.commit()  # Save the change
     return redirect(f"/song/{song_id}")
+
 
 @app.route("/all_liked")
 @login_required
