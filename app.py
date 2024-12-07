@@ -195,8 +195,9 @@ def profile():
         return render_template("profile.html", name=username, songs=songs)
 
     # For GET requests, show user reviews
-    reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
-    return render_template("profile.html", reviews=reviews)
+    else:
+        reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
+        return render_template("profile.html", reviews=reviews)
 
 @app.route("/review", methods=["POST"])
 @login_required
