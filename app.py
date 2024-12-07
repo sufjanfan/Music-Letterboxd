@@ -372,44 +372,6 @@ def all_reviews():
     return render_template("all_reviews.html", reviews=reviews)
 
 
-@app.route("/edit_review/<int:review_id>", methods=["GET", "POST"])
-@login_required
-def edit_review(review_id):
-    # Fetch the review details
-    conn = get_db_connection()
-    review = conn.execute(
-        "SELECT * FROM reviews WHERE id = ? AND user_id = ?",
-        (review_id, session["user_id"])
-    ).fetchone()
-
-    if not review:
-        return apology("Review not found or you don't have permission to edit it.", 403)
-
-    if request.method == "POST":
-        # Get the updated review data from the form
-        updated_review = request.form.get("review")
-        updated_rating = request.form.get("rating")
-
-        # Validate inputs
-        if not updated_review or not updated_rating:
-            return apology("All fields are required.", 400)
-
-        if not updated_rating.isdigit() or not (1 <= int(updated_rating) <= 5):
-            return apology("Rating must be a number between 1 and 5.", 400)
-
-        # Update the review in the database
-        conn.execute(
-            "UPDATE reviews SET review = ?, rating = ?, timestamp = CURRENT_TIMESTAMP WHERE id = ? AND user_id = ?",
-            (updated_review, int(updated_rating), review_id, session["user_id"])
-        )
-        conn.commit()
-        conn.close()
-
-        return redirect("/all_reviews")
-
-    conn.close()
-    return render_template("edit_review.html", review=review)
-
 
 
 if __name__ == "__main__":
