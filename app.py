@@ -298,7 +298,12 @@ def add_review(song_id):
 @app.route("/recent")
 @login_required
 def recent():
-    reviews = db.execute("SELECT * FROM reviews")
+    reviews = db.execute("""
+        SELECT reviews.username, reviews.rating, reviews.timestamp, reviews.review,
+               songs.title AS song_title, songs.artist AS song_artist
+        FROM reviews
+        JOIN songs ON reviews.song_id = songs.id
+    """)
     return render_template("recent.html", reviews=reviews)
 
 @app.route("/like", methods=["POST"])

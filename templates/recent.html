@@ -11,16 +11,17 @@
 
         <!-- User Reviews -->
         {% if reviews %}
-            <ul>
-                {% for review in reviews %}
-                    <li>
-                        <strong>{{ review['song_title'] }}</strong> - {{ review['rating'] }}/5
-                        <p>{{ review['review'] }}</p>
-                    </li>
-                {% endfor %}
-            </ul>
+        <ul>
+            {% for review in reviews %}
+                <li>
+                    {{ review.username }}: (Rating: {{ review.rating }}) {{ review.timestamp }}
+                    <p>{{ review.review }}</p>
+                    <p><strong>Song:</strong> {{ review.song_title }} by {{ review.song_artist }}</p>
+                </li>
+            {% endfor %}
+        </ul>
         {% else %}
-            <p>No reviews yet.</p>
+        <p>No reviews yet.</p>
         {% endif %}
     </div>
 {% endblock %}
