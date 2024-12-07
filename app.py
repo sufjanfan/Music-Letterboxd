@@ -259,6 +259,9 @@ def song_details(song_id):
 @login_required
 def add_review(song_id):
     try:
+        # Retrieve song details from Spotify API
+        song = sp.track(song_id)
+
         # Retrieve and validate form data
         review_text = request.form.get("review")
         rating = request.form.get("rating")
@@ -271,11 +274,15 @@ def add_review(song_id):
             error_message = "Rating must be a number between 1 and 5."
             return render_template("song.html", error_message=error_message, song_id=song_id)
 
-        # Insert review into the database
+        # Get song details (title and artist)
+        song_title = song["name"]
+        song_artist = ", ".join([artist["name"] for artist in song["artists"]])
+
+        # Insert review into the database, including the song title and artist
         conn = get_db_connection()
         conn.execute(
-            "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
-            (session["user_id"], song_id, review_text, int(rating))
+            "INSERT INTO reviews (user_id, song_id, review, rating, song_title, song_artist) VALUES (?, ?, ?, ?, ?, ?)",
+            (session["user_id"], song_id, review_text, int(rating), song_title, song_artist)
         )
         conn.commit()
         conn.close()
@@ -286,6 +293,7 @@ def add_review(song_id):
         print(f"Error: {e}")  # Debugging
         error_message = "An error occurred while submitting your review."
         return render_template("song.html", error_message=error_message, song_id=song_id)
+
 
 @app.route("/recent")
 @login_required
