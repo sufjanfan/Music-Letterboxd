@@ -174,7 +174,8 @@ def profile():
 
     # Check if a user is found
     if len(user) != 1:
-        return apology("User not found")
+        error_message = "Something went wrong during registration."
+        return render_template("profile.html", error_message=error_message)
 
     # Retrieve the username
     username = user[0]["username"]
@@ -187,7 +188,8 @@ def profile():
 
         # Validate at least one field is filled
         if not song_name and not artist:
-            return apology("must provide at least a song name or artist")
+            error_message = "Must provide at least a song name or artist."
+            return render_template("profile.html", error_message=error_message)
 
         # Construct the query for the MusicBrainz API
         query = ""
@@ -201,7 +203,8 @@ def profile():
         # Make the API request
         response = requests.get(f"https://musicbrainz.org/ws/2/recording/?query={query}&fmt=json")
         if response.status_code != 200:
-            return apology("MusicBrainz API error")
+            error_message = "MusicBrainz API error."
+            return render_template("profile.html", error_message=error_message)
 
         # Get the list of songs
         songs = response.json().get("recordings", [])
@@ -223,7 +226,8 @@ def review():
 
         song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
         if not song:
-                return apology("Song does not exist", 400)
+            error_message = "Song does not exist."
+            return render_template("register.html", error_message=error_message)
 
         if not song_id or not review_text or not rating:
             return apology("All fields are required", 400)
