@@ -191,37 +191,28 @@ def profile():
 @app.route("/review", methods=["POST"])
 @login_required
 def review():
-    # Retrieve form data
-    song_id = request.form.get("song_id")  # Ensure this field is in the HTML form
-    review_text = request.form.get("review")
-    rating = request.form.get("rating")
-
-    # Validate input
-    if not song_id or not review_text or not rating:
-        return apology("must fill all fields")
-
     try:
-        # Convert rating to an integer
-        rating = int(rating)
+        # Retrieve and validate form data
+        song_id = request.form.get("song_id")
+        review_text = request.form.get("review")
+        rating = request.form.get("rating")
 
-        # Check if song_id exists in the database
-        song = db.execute("SELECT * FROM songs WHERE id = ?", song_id)
-        if not song:
-            return apology("Song not found")
+        if not song_id or not review_text or not rating:
+            return apology("All fields are required", 400)
 
-        # Insert the review into the database
+        if not rating.isdigit() or not (1 <= int(rating) <= 5):
+            return apology("Rating must be a number between 1 and 5", 400)
+
+        # Insert review into the database
         db.execute(
             "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
-            session["user_id"], song_id, review_text, rating
+            session["user_id"], song_id, review_text, int(rating)
         )
-    except ValueError:
-        return apology("Rating must be an integer")
+        return redirect("/profile")
+
     except Exception as e:
-        print(f"Error inserting review: {e}")  # Debugging
-        return apology("An error occurred while submitting your review")
-
-    return redirect("/profile")
-
+        print(f"Error: {e}")  # Debugging
+        return apology("An error occurred while submitting your review", 500)
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -283,22 +274,28 @@ def song_details(song_id):
 @app.route("/song/<song_id>/review", methods=["POST"])
 @login_required
 def add_review(song_id):
-    review_text = request.form.get("review")
-    rating = request.form.get("rating")
-
-    if not review_text or not rating:
-        return apology("must fill all fields")
-
     try:
+        # Retrieve and validate form data
+        review_text = request.form.get("review")
+        rating = request.form.get("rating")
+
+        if not review_text or not rating:
+            return apology("All fields are required", 400)
+
+        if not rating.isdigit() or not (1 <= int(rating) <= 5):
+            return apology("Rating must be a number between 1 and 5", 400)
+
+        # Insert review into the database
         db.execute(
             "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
             session["user_id"], song_id, review_text, int(rating)
         )
+        return redirect(f"/song/{song_id}")
+
     except Exception as e:
         print(f"Error: {e}")  # Debugging
-        return apology("An error occurred while submitting your review")
+        return apology("An error occurred while submitting your review", 500)
 
-    return redirect(f"/song/{song_id}")
 
 if __name__ == "__main__":
     app.run(debug=True)
