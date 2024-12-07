@@ -1,59 +1,58 @@
 {% extends "layout.html" %}
 
 {% block main %}
-<div class="profile-container">
-    <h1 class="syne">Your Profile</h2>
+    <div class="profile-container">
+        <h1 class="syne">profile</h1>
 
-    <!-- Song Search Form -->
-    <!-- <form action="/profile" method="POST">
-        <div>
-            <label for="song_name">Song Name:</label>
-            <input type="text" name="song_name" id="song_name" placeholder="Enter song name">
-        </div>
-        <div>
-            <label for="artist">Artist:</label>
-            <input type="text" name="artist" id="artist" placeholder="Enter artist name">
-        </div>
-        <button type="submit">Search</button>
-    </form>
-    {% if songs %}
-        <h3>Search Results</h3>
-        <ul>
-            {% for song in songs %}
-                <li>
-                    <strong>{{ song['title'] }}</strong> by {{ song['artist-credit'][0]['name'] }}
-                    <form action="/review" method="POST">
-                        <input type="hidden" name="song_id" value="{{ song['id'] }}">
-                        <label for="review_{{ song['id'] }}">Review:</label>
-                        <input type="text" name="review" id="review_{{ song['id'] }}" required>
-                        <label for="rating_{{ song['id'] }}">Rating:</label>
-                        <select name="rating" id="rating_{{ song['id'] }}">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                        </select>
-                        <button type="submit">Submit Review</button>
-                    </form>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %} -->
+        <!-- Song Search Form -->
+        <!-- <form action="/profile" method="POST">
+            <div>
+                <label for="song_name">Song Name:</label>
+                <input type="text" name="song_name" id="song_name" placeholder="Enter song name">
+            </div>
+            <div>
+                <label for="artist">Artist:</label>
+                <input type="text" name="artist" id="artist" placeholder="Enter artist name">
+            </div>
+            <button type="submit">Search</button>
+        </form>
+        {% if songs %}
+            <h3>Search Results</h3>
+            <ul>
+                {% for song in songs %}
+                    <li>
+                        <strong>{{ song['title'] }}</strong> by {{ song['artist-credit'][0]['name'] }}
+                        <form action="/review" method="POST">
+                            <input type="hidden" name="song_id" value="{{ song['id'] }}">
+                            <label for="review_{{ song['id'] }}">Review:</label>
+                            <input type="text" name="review" id="review_{{ song['id'] }}" required>
+                            <label for="rating_{{ song['id'] }}">Rating:</label>
+                            <select name="rating" id="rating_{{ song['id'] }}">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                            <button type="submit">Submit Review</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %} -->
 
-    <!-- User Reviews -->
-    <h2 class="syne">Your Reviews</h3>
-    {% if reviews %}
-        <ul>
-            {% for review in reviews %}
-                <li>
-                    <strong>{{ review['song_title'] }}</strong> - {{ review['rating'] }}/5
-                    <p>{{ review['review'] }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No reviews yet.</p>
-    {% endif %}
-</div>
-{% endblock %}
+        <!-- User Reviews -->
+        {% if reviews %}
+            <ul>
+                {% for review in reviews %}
+                    <li>
+                        <strong>{{ review['song_title'] }}</strong> - {{ review['rating'] }}/5
+                        <p>{{ review['review'] }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No reviews yet.</p>
+        {% endif %}
+    </div>
+    {% endblock %}

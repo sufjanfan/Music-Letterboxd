@@ -196,7 +196,11 @@ def review():
         song_id = request.form.get("song_id")
         review_text = request.form.get("review")
         rating = request.form.get("rating")
-        
+        print(f"User ID: {session.get('user_id')}")
+        print(f"Song ID: {song_id}")
+        print(f"Review Text: {review_text}")
+        print(f"Rating: {rating}")
+
         if not song_id or not review_text or not rating:
             return apology("All fields are required", 400)
 
