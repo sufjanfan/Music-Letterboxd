@@ -2,17 +2,18 @@
 
 {% block main %}
 
-<form method="POST">
-    <div>
-        <label for="song_name">Song Name:</label>
-        <input type="text" name="song_name" id="song_name">
-    </div>
-    <div>
-        <label for="artist">Artist:</label>
-        <input type="text" name="artist" id="artist">
-    </div>
-    <button type="submit">Search</button>
-</form>
+    <form method="POST">
+        <div>
+            <label for="song_name">Song Name:</label>
+            <input type="text" name="song_name" id="song_name">
+        </div>
+        <div>
+            <label for="artist">Artist:</label>
+            <input type="text" name="artist" id="artist">
+        </div>
+        <button type="submit">Search</button>
+    </form>
+
 {% if songs %}
     <ul>
     {% for song in songs %}
