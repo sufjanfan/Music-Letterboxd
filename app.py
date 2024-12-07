@@ -158,6 +158,8 @@ def logout():
 @login_required
 def profile():
     if request.method == "POST":
+        name = db.execute("SELECT * FROM users WHERE user_id = ?", session["user_id"])
+
         # Get song name and artist from the form
         song_name = request.form.get("song_name")
         artist = request.form.get("artist")
@@ -182,7 +184,7 @@ def profile():
 
         # Get the list of songs
         songs = response.json().get("recordings", [])
-        return render_template("profile.html", songs=songs)
+        return render_template("profile.html", name=name, songs=songs)
 
     # For GET requests, show user reviews
     reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
@@ -196,12 +198,33 @@ def review():
         song_id = request.form.get("song_id")
         review_text = request.form.get("review")
         rating = request.form.get("rating")
+        print(f"User ID: {session.get('user_id')}")
+        print(f"Song ID: {song_id}")
+        print(f"Review Text: {review_text}")
+        print(f"Rating: {rating}")
 
         if not song_id or not review_text or not rating:
             return apology("All fields are required", 400)
 
         if not rating.isdigit() or not (1 <= int(rating) <= 5):
             return apology("Rating must be a number between 1 and 5", 400)
+
+        song_check = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
+        if not song_check:
+            # Fetch song details from MusicBrainz API
+            response = requests.get(f"https://musicbrainz.org/ws/2/recording/{song_id}?fmt=json")
+            if response.status_code == 200:
+                song = response.json()
+                title = song["title"]
+                artist = song["artist-credit"][0]["name"]
+
+                # Insert the song into the database
+                db.execute(
+                    "INSERT OR IGNORE INTO songs (id, title, artist) VALUES (?, ?, ?)",
+                    song_id, title, artist
+                )
+            else:
+                return apology("Could not fetch song details", 500)
 
         # Insert review into the database
         db.execute(
