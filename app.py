@@ -422,11 +422,17 @@ def delete_review(review_id):
 @login_required
 def edit_review(review_id):
     try:
-        # Ensure the review belongs to the logged-in user
-        review = db.execute("SELECT * FROM reviews WHERE id = ? AND user_id = ?", review_id, session["user_id"])
+        # Fetch the review along with the associated song's title and artist
+        review = db.execute("""
+            SELECT reviews.*, songs.title AS song_title, songs.artist AS song_artist
+            FROM reviews
+            JOIN songs ON reviews.song_id = songs.id
+            WHERE reviews.id = ? AND reviews.user_id = ?
+        """, review_id, session["user_id"])
+
         if not review:
             return apology("Review not found or not yours to edit", 403)
-        
+
         # For GET request, display the review in a form
         if request.method == "GET":
             return render_template("edit_review.html", review=review[0])
@@ -456,7 +462,6 @@ def edit_review(review_id):
         print(f"Error: {e}")
         return apology("An error occurred while editing the review.")
 
-    
 
 if __name__ == "__main__":
     app.run(debug=True)

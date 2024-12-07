@@ -3,15 +3,18 @@
 {% block main %}
 <div class="container">
     <h1>Edit Your Review</h1>
+    <!-- Display the song title and artist -->
+    <h2>{{ review.song_title }} by {{ review.song_artist }}</h2>
+    
     <form action="{{ url_for('edit_review', review_id=review.id) }}" method="POST">
         <div class="mb-3">
             <label for="rating">Rating:</label>
-                    <div class="stars-input">
-                        {% for star in range(5, 0, -1) %}
-                            <input type="radio" id="star{{ star }}" name="rating" value="{{ star }}" required>
-                            <label for="star{{ star }}">★</label>
-                        {% endfor %}
-                    </div>
+            <div class="stars-input">
+                {% for star in range(5, 0, -1) %}
+                    <input type="radio" id="star{{ star }}" name="rating" value="{{ star }}" {% if star == review.rating %}checked{% endif %} required>
+                    <label for="star{{ star }}">★</label>
+                {% endfor %}
+            </div>
         </div>
         <div class="mb-3">
             <label for="review" class="form-label">Review</label>
