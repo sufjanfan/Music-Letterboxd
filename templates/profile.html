@@ -10,7 +10,7 @@
         <br>
 
             <!-- Liked Songs -->
-            <h1>Your Liked Songs</h1>
+            <h2>Your Liked Songs</h2>
             {% if songs %}
                 <ul>
                     {% for song in songs %}
@@ -20,12 +20,12 @@
             {% else %}
                 <p>You haven't liked any songs yet.</p>
             {% endif %}
-<a href="{{ url_for('all_liked') }}">View All Liked Songs</a>
+            <a href="{{ url_for('all_liked') }}">View All Liked Songs</a>
 
 
 
         <!-- User Reviews -->
-        <h1>Your Reviews</h1>
+        <h2>Your Reviews</h2>
         {% if reviews %}
             <ul>
                 {% for review in reviews %}
