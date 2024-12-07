@@ -253,6 +253,7 @@ def search():
 
         return render_template("search.html", songs=songs)
 
+    # For GET requests, just render the empty search page
     return render_template("search.html")
 
 
