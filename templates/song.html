@@ -26,7 +26,7 @@
             <h2>Reviews</h2>
             <ul>
                 {% for review in reviews %}
-                    <li>{{ review.username }}: {{ review.review }} (Rating: {{ review.rating }})</li>
+                    <li>{{ review.username }}: {{ review.review }} (Rating: {{ review.rating }}) {{review.timestamp}}</li>
                 {% endfor %}
             </ul>
 
