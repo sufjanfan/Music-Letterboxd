@@ -198,7 +198,7 @@ def profile():
     # For GET requests, show user reviews
     else:
         reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
-        return render_template("profile.html", reviews=reviews)
+        return render_template("profile.html", name=username, reviews=reviews)
 
 @app.route("/review", methods=["POST"])
 @login_required
