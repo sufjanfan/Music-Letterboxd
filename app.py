@@ -173,7 +173,7 @@ def logout():
     return redirect("/")
 
 # Profile
-@app.route("/profile", methods=["GET", "POST"])
+@app.route("/profile", methods=["POST"])
 @login_required
 def profile():
     # Get the user details (including the username) based on the session's user_id
@@ -187,40 +187,8 @@ def profile():
     # Retrieve the username
     username = user[0]["username"]
 
-    if request.method == "POST":
-
-        # Get song name and artist from the form
-        song_name = request.form.get("song_name")
-        artist = request.form.get("artist")
-
-        # Validate at least one field is filled
-        if not song_name and not artist:
-            error_message = "Must provide at least a song name or artist."
-            return render_template("profile.html", error_message=error_message)
-
-        # Construct the query for the MusicBrainz API
-        query = ""
-        if song_name:
-            query += f'title:"{song_name}"'
-        if artist:
-            if query:
-                query += " AND "
-            query += f'artist:"{artist}"'
-
-        # Make the API request
-        response = requests.get(f"https://musicbrainz.org/ws/2/recording/?query={query}&fmt=json")
-        if response.status_code != 200:
-            error_message = "MusicBrainz API error."
-            return render_template("profile.html", error_message=error_message)
-
-        # Get the list of songs
-        songs = response.json().get("recordings", [])
-        return render_template("profile.html", name=username, songs=songs)
-
-    # For GET requests, show user reviews
-    else:
-        reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
-        return render_template("profile.html", name=username, reviews=reviews)
+    reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
+    return render_template("profile.html", name=username, reviews=reviews)
 
 @app.route("/review", methods=["POST"])
 @login_required
