@@ -12,11 +12,9 @@
             </div>
         {% else %}
             <h1 class="syne">{{ song['name'] }}</h1>
-            <form action="/like" method="post" id="like-form">
-                <input type="hidden" name="song_id" value="{{ song['id'] }}">
-                <button type="submit" class="btn">
-                    <i class="heart-icon {% if song_liked %}filled{% endif %}"></i>
-                </button>
+            <form id="like-form-{{ song.id }}" action="/like" method="POST" class="like-form">
+                <input type="hidden" name="song_id" value="{{ song.id }}">
+                <i id="heart-icon-{{ song.id }}" class="heart-icon empty" onclick="likeSong('{{ song.id }}')"></i>
             </form>
             <br>
             <h2>Artist: {{ song['artists'][0]['name'] }}</h2>
