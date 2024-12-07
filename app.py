@@ -299,9 +299,10 @@ def add_review(song_id):
 @login_required
 def recent():
     reviews = db.execute("""
-        SELECT reviews.username, reviews.rating, reviews.timestamp, reviews.review,
+        SELECT users.username, reviews.rating, reviews.timestamp, reviews.review,
                songs.title AS song_title, songs.artist AS song_artist
         FROM reviews
+        JOIN users ON reviews.user_id = users.id
         JOIN songs ON reviews.song_id = songs.id
     """)
     return render_template("recent.html", reviews=reviews)
