@@ -28,7 +28,7 @@
             <ul>
                 {% for review in reviews %}
                     <li>
-                        <strong>{{ review['song_title'] }}</strong> - {{ review['rating'] }}/5
+                        <strong>{{ review['song_title'] }}</strong> - <strong>{{ review['song_title'] }} - {{ review['rating'] }}/5 - <strong>{{ review['song_title'] }}
                         <p>{{ review['review'] }}</p>
                     </li>
                 {% endfor %}
