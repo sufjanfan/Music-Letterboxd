@@ -7,10 +7,9 @@ db = SQL("sqlite:///songs.db")
 # Ensure the table has a 'track_id' column
 db.execute("""
     CREATE TABLE IF NOT EXISTS songs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY,
         title TEXT NOT NULL,
         artist TEXT NOT NULL,
-        track_id TEXT UNIQUE
     )
 """)
 
