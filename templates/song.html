@@ -17,15 +17,16 @@
             {% for liked_song in liked_songs %}
                 {% if liked_song.name == song.title %}
                     {% set liked = true %}
-                    {% break %}
                 {% endif %}
             {% endfor %}
 
             <!-- Heart Icon for Liking the Song -->
             <form id="like-form-{{ song.id }}" action="/like" method="POST" class="like-form">
                 <input type="hidden" name="song_id" value="{{ song.id }}">
-                <i id="heart-icon-{{ song.id }}" class="heart-icon {% if liked %}filled{% else %}empty{% endif %}" onclick="likeSong('{{ song.id }}')"></i>
+                <!-- Using Font Awesome Heart Icon -->
+                <i id="heart-icon-{{ song.id }}" class="heart-icon fa {% if liked %}fa-heart{% else %}fa-heart-o{% endif %}" onclick="likeSong('{{ song.id }}')"></i>
             </form>
+
             <br>
             <h2>Artist: {{ song['artists'][0]['name'] }}</h2>
             <h3>Album: {{ song['album']['name'] }}</h3>
