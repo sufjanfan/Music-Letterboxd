@@ -324,6 +324,7 @@ def recent():
 @login_required
 def like_song():
     song_id = request.form.get("song_id")
+
     if not song_id:
         error_message = "Song ID required."
         return render_template("song.html", error_message=error_message, song_id=song_id)
@@ -334,16 +335,16 @@ def like_song():
         error_message = "Song not found."
         return render_template("song.html", error_message=error_message, song_id=song_id)
 
-    # Debugging: Check the values before executing the query
+    # Print user ID and song ID for debugging
     print(f"User ID: {session['user_id']}, Song ID: {song_id}")  # Debugging output
 
     # Check if the song is already liked by the user
     already_liked = db.execute(
-        "SELECT * FROM likes WHERE user_id = ?",
-        (session["user_id"],)  # Only passing one value (the user_id)
+        "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
+        (session["user_id"], song_id)  # Tuple with exactly two values
     )
 
-    # Debugging output for the query result
+    # Debugging: Check the result of the query
     print(f"Already liked: {already_liked}")
 
     if len(already_liked) == 0:
@@ -353,7 +354,7 @@ def like_song():
         # If already liked, remove it from likes
         db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
 
-    db.commit()  # Save the change
+    # No need for db.commit() here, it will be auto-committed
     return redirect(f"/song/{song_id}")
 
 
