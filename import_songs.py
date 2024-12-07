@@ -20,7 +20,7 @@ def populate_songs():
         try:
             # Insert into the songs table
             db.execute(
-                "INSERT INTO songs (title, artist, id) VALUES (?, ?, ?)",
+                "INSERT INTO songs (title, artist, track_id) VALUES (?, ?, ?)",
                 title, artist, id
             )
         except Exception as e:
