@@ -195,7 +195,15 @@ def profile():
     username = user[0]["username"]
 
     reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
-    return render_template("profile.html", name=username, reviews=reviews)
+    # Fetch user's liked songs
+    liked_songs = db.execute(
+        "SELECT songs.title AS name, songs.artist FROM songs "
+        "JOIN likes ON songs.id = likes.song_id WHERE likes.user_id = ?",
+        session["user_id"]
+    )
+
+    # Pass data to the template
+    return render_template("profile.html", name=username, reviews=reviews, songs=liked_songs)
 
 '''
 @app.route("/review", methods=["POST"])
