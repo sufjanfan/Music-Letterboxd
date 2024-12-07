@@ -158,7 +158,7 @@ def logout():
 @login_required
 def profile():
     if request.method == "POST":
-        name = db.execute("SELECT * FROM users WHERE user_id = ?", session["user_id"])
+        name = db.execute("SELECT username FROM users WHERE user_id = ?", session["user_id"])
 
         # Get song name and artist from the form
         song_name = request.form.get("song_name")
@@ -188,7 +188,7 @@ def profile():
 
     # For GET requests, show user reviews
     reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
-    return render_template("profile.html", reviews=reviews)
+    return render_template("profile.html", name=name, reviews=reviews)
 
 @app.route("/review", methods=["POST"])
 @login_required
