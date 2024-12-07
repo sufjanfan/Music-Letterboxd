@@ -70,11 +70,13 @@ def login():
         password = request.form.get("password")
 
         if not username or not password:
-            return apology("must provide username and password")
+            error_message = "Must provide both username and password."
+            return render_template("login.html", error_message=error_message)
 
         user = db.execute("SELECT * FROM users WHERE username = ?", username)
         if len(user) != 1 or not check_password_hash(user[0]["hash"], password):
-            return apology("invalid username or password")
+            error_message = "Invalid username or password."
+            return render_template("login.html", error_message=error_message)
 
         session["user_id"] = user[0]["id"]
         return redirect("/profile")
@@ -90,18 +92,24 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
-        # makes sure fields/data category exist
+
+        # Check if all fields are provided
         if not username:
-            return apology("must provide username")
+            error_message = "Must provide a username."
+            return render_template("register.html", error_message=error_message)
         if not password:
-            return apology("must provide password")
+            error_message = "Must provide a password."
+            return render_template("register.html", error_message=error_message)
         if not confirmation:
-            return apology("must provide confirmation")
-        # makes sure password and confirmation match
+            error_message = "Must provide a confirmation."
+            return render_template("register.html", error_message=error_message)
+
+        # Check if passwords match
         if password != confirmation:
-            return apology("passwords do not match")
-        # hashes password so that actual password is not submitted
-        # inserts user into database
+            error_message = "Passwords do not match."
+            return render_template("register.html", error_message=error_message)
+
+        # Hash the password and try to insert the new user
         try:
             hash_password = generate_password_hash(password)
             db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, hash_password)
@@ -109,14 +117,18 @@ def register():
             # Get the user id from the database (after the insert)
             user = db.execute("SELECT * FROM users WHERE username = ?", username)
             if len(user) != 1:
-                return apology("something went wrong during registration")
+                error_message = "Something went wrong during registration."
+                return render_template("register.html", error_message=error_message)
 
             # Store user_id in session to log them in
             session["user_id"] = user[0]["id"]
 
         except ValueError:
-            return apology("username already exists")
+            error_message = "Username already exists."
+            return render_template("register.html", error_message=error_message)
+
         return redirect("/profile")
+
     # go to registration page/form for GET requests
     else:
         return render_template("register.html")
