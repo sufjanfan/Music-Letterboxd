@@ -157,16 +157,17 @@ def logout():
 @app.route("/profile", methods=["GET", "POST"])
 @login_required
 def profile():
+    # Get the user details (including the username) based on the session's user_id
+    user = db.execute("SELECT * FROM users WHERE id = ?", (session["user_id"],))
+
+    # Check if a user is found
+    if len(user) != 1:
+        return apology("User not found")
+
+    # Retrieve the username
+    username = user[0]["username"]
+
     if request.method == "POST":
-        # Get the user details (including the username) based on the session's user_id
-        user = db.execute("SELECT * FROM users WHERE id = ?", (session["user_id"],))
-
-        # Check if a user is found
-        if len(user) != 1:
-            return apology("User not found")
-
-        # Retrieve the username
-        username = user[0]["username"]
 
         # Get song name and artist from the form
         song_name = request.form.get("song_name")
