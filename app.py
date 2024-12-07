@@ -227,13 +227,15 @@ def review():
         song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
         if not song:
             error_message = "Song does not exist."
-            return render_template("register.html", error_message=error_message)
+            return render_template("song.html", error_message=error_message)
 
         if not song_id or not review_text or not rating:
-            return apology("All fields are required", 400)
+            error_message = "All fields are required."
+            return render_template("song.html", error_message=error_message)
 
         if not rating.isdigit() or not (1 <= int(rating) <= 5):
-            return apology("Rating must be a number between 1 and 5", 400)
+            error_message = "Rating must be a number between 1 and 5."
+            return render_template("song.html", error_message=error_message)
 
         # Insert review into the database
         db.execute(
@@ -244,7 +246,8 @@ def review():
 
     except Exception as e:
         print(f"Error: {e}")  # Debugging
-        return apology("An error occurred while submitting your review", 500)
+        error_message = "An error occurred while submitting your review."
+        return render_template("profile.html", error_message=error_message)
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -256,7 +259,8 @@ def search():
 
         # Validate at least one field is filled
         if not song_name and not artist:
-            return apology("must provide at least a song name or artist")
+            error_message = "Must provide at least a song name or artist."
+            return render_template("search.html", error_message=error_message)
 
         # Construct the query for the MusicBrainz API
         query = ""
@@ -270,7 +274,8 @@ def search():
         # Make the API request
         response = requests.get(f"https://musicbrainz.org/ws/2/recording/?query={query}&fmt=json")
         if response.status_code != 200:
-            return apology("MusicBrainz API error")
+            error_message = "MusicBrainz API error."
+            return render_template("search.html", error_message=error_message)
 
         # Get the list of songs
         songs = response.json().get("recordings", [])
@@ -286,7 +291,8 @@ def song_details(song_id):
         response = requests.get(f"https://musicbrainz.org/ws/2/recording/{song_id}?fmt=json")
         if response.status_code != 200:
             print(response.text)  # Debugging
-            return apology("MusicBrainz API error")
+            error_message = "MusicBrainz API error."
+            return render_template("song.html", error_message=error_message)
 
         song = response.json()
 
@@ -300,7 +306,8 @@ def song_details(song_id):
         return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
     except Exception as e:
         print(f"Error: {e}")  # Debugging
-        return apology("An unexpected error occurred")
+        error_message = "An unexpected error occurred."
+        return render_template("song.html", error_message=error_message)
 
 
 @app.route("/song/<song_id>/review", methods=["POST"])
@@ -312,6 +319,8 @@ def add_review(song_id):
         rating = request.form.get("rating")
 
         if not review_text or not rating:
+            error_message = "All fields are required."
+            return render_template("song.html", error_message=error_message)
             return apology("All fields are required", 400)
 
         if not rating.isdigit() or not (1 <= int(rating) <= 5):
