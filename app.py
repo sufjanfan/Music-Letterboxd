@@ -148,7 +148,7 @@ def profile():
         FROM songs
         JOIN likes ON songs.id = likes.song_id
         WHERE likes.user_id = ?
-        ORDER BY likes.id DESC LIMIT 5
+        ORDER BY likes.timestamp DESC LIMIT 5
         """,
         (session["user_id"],)
     )
