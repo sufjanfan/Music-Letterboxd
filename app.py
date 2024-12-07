@@ -135,6 +135,7 @@ def profile():
         FROM reviews
         JOIN songs ON reviews.song_id = songs.id
         WHERE reviews.user_id = ?
+        ORDER BY reviews.timestamp DESC LIMIT 5
         """,
         (session["user_id"],)
     )
