@@ -319,6 +319,8 @@ def recent():
         JOIN songs ON reviews.song_id = songs.id
     """)
     return render_template("recent.html", reviews=reviews)
+
+
 @app.route("/like", methods=["POST"])
 @login_required
 def like_song():
@@ -349,6 +351,8 @@ def like_song():
 
     # Return a JSON response with the updated like status
     return jsonify({"liked": liked})
+
+
 
 @app.route("/all_liked")
 @login_required
