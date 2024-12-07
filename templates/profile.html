@@ -9,20 +9,21 @@
         <h1 class="syne">{{ name }}'s<br>music box</h1>
         <br>
 
-        <!-- Liked Songs -->
-        <h1>Your Liked Songs</h1>
-        {% if songs %}
-            <ul>
-                {% for song in songs|slice(':5') %}
-                    <li>{{ song.name }} by {{ song.artist }}</li>
-                {% endfor %}
-            </ul>
-            <a href="liked_songs.html">View All Liked Songs</a>
-        {% else %}
-            <p>You haven't liked any songs yet.</p>
-        {% endif %}
+            <!-- Liked Songs -->
+            <h1>Your Liked Songs</h1>
+            {% if songs %}
+                <ul>
+                    {% for song in songs %}
+                        <li>{{ song.name }} by {{ song.artist }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>You haven't liked any songs yet.</p>
+            {% endif %}
+
 
         <!-- User Reviews -->
+        <h1>Your Reviews</h1>
         {% if reviews %}
             <ul>
                 {% for review in reviews %}

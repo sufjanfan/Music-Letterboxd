@@ -136,12 +136,6 @@ def profile():
         session["user_id"]
     )
 
-    # Fetch the user's 5 most recent reviews
-    reviews = db.execute(
-        "SELECT * FROM reviews WHERE user_id = ? ORDER BY created_at DESC LIMIT 5",
-        session["user_id"]
-    )
-
     # Pass data to the template
     return render_template("profile.html", name=username, reviews=reviews, songs=liked_songs)
 
@@ -235,7 +229,7 @@ def song_details(song_id):
             # Insert review into the database
             conn = get_db_connection()
             conn.execute(
-                "INSERT INTO reviews (user_id, song_id, review, rating, song_title, song_artist) VALUES (?, ?, ?, ?, ?, ?)",
+                "INSERT INTO reviews (review, rating, user_id, song_id, song_title, song_artist, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
                 (session["user_id"], song_id, review_text, int(rating), song["name"], ", ".join([artist["name"] for artist in song["artists"]]))
             )
             conn.commit()
@@ -288,7 +282,7 @@ def add_review(song_id):
         # Insert review into the database, including the song title and artist
         conn = get_db_connection()
         conn.execute(
-            "INSERT INTO reviews (user_id, song_id, review, rating, song_title, song_artist) VALUES (?, ?, ?, ?, ?, ?)",
+            "INSERT INTO reviews (review, rating, user_id, song_id, song_title, song_artist, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
             (session["user_id"], song_id, review_text, int(rating), song_title, song_artist)
         )
         conn.commit()
