@@ -183,18 +183,24 @@ def profile():
 @app.route("/review", methods=["POST"])
 @login_required
 def review():
-    song_title = request.form.get("title")
+    song_id = request.form.get("song_id")  # Assuming song_id is sent from the form
     review_text = request.form.get("review")
     rating = request.form.get("rating")
 
-    if not song_title or not review_text or not rating:
+    if not song_id or not review_text or not rating:
         return apology("must fill all fields")
 
-    db.execute(
-        "INSERT INTO reviews (user_id, title, review, rating) VALUES (?, ?, ?, ?)",
-        session["user_id"], song_title, review_text, rating
-    )
+    try:
+        db.execute(
+            "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
+            session["user_id"], song_id, review_text, int(rating)
+        )
+    except Exception as e:
+        print(f"Error: {e}")  # Debugging
+        return apology("An error occurred while submitting your review")
+
     return redirect("/profile")
+
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
@@ -228,7 +234,6 @@ def search():
     return render_template("search.html")
 
 
-
 @app.route("/song/<song_id>")
 def song_details(song_id):
     try:
@@ -239,17 +244,19 @@ def song_details(song_id):
             return apology("MusicBrainz API error")
 
         song = response.json()
+
         # Fetch reviews from the database
         reviews = db.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", song_id)
 
         # Calculate average rating
-        ratings = [review["rating"] for review in reviews if "rating" in review]
+        ratings = [review["rating"] for review in reviews]
         average_rating = sum(ratings) / len(ratings) if ratings else None
 
-        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating, artist_name=artist_name)
+        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
     except Exception as e:
         print(f"Error: {e}")  # Debugging
         return apology("An unexpected error occurred")
+
 
 @app.route("/song/<song_id>/review", methods=["POST"])
 @login_required
@@ -257,13 +264,18 @@ def add_review(song_id):
     review_text = request.form.get("review")
     rating = request.form.get("rating")
 
-    if not title or not review_text or not rating:
+    if not review_text or not rating:
         return apology("must fill all fields")
 
-    db.execute(
-        "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
-        session["user_id"], song_id, review_text, rating
-    )
+    try:
+        db.execute(
+            "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
+            session["user_id"], song_id, review_text, int(rating)
+        )
+    except Exception as e:
+        print(f"Error: {e}")  # Debugging
+        return apology("An error occurred while submitting your review")
+
     return redirect(f"/song/{song_id}")
 
 if __name__ == "__main__":
