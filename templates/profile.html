@@ -34,7 +34,7 @@
                         <p>Rating: {{ review.rating }}</p>
                         <p>{{ review.review }}</p>
                         <p>Reviewed on: {{ review.timestamp }}</p>
-                        <a href="/edit_review/{{ review.id }}">Edit</a>
+                        <a href="{{ url_for('edit_review', review_id=review.id) }}">Edit</a>
                     </div>
                 {% endfor %}
             </ul>
