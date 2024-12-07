@@ -343,6 +343,9 @@ def like_song():
         (session["user_id"], song_id)  # Ensure this is a tuple with two values
     )
 
+    # Debugging output for the query result
+    print(f"Already liked: {already_liked}")
+
     if len(already_liked) == 0:
         # If not liked yet, add the song to likes
         db.execute("INSERT INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
