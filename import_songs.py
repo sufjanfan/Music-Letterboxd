@@ -21,7 +21,7 @@ def populate_songs():
             # Insert into the songs table
             db.execute(
                 "INSERT INTO songs (title, artist, track_id) VALUES (?, ?, ?)",
-                title, artist, id
+                title, artist, track_id
             )
         except Exception as e:
             print(f"Error inserting {title}: {e}")
