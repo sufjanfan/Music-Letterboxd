@@ -36,46 +36,6 @@ sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_CLI
 def index():
     return render_template("index.html")
 
-'''
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    """Log user in"""
-
-    # Forget any user_id
-    session.clear()
-
-    # User reached route via POST (as by submitting a form via POST)
-    if request.method == "POST":
-        # Ensure username was submitted
-        if not request.form.get("username"):
-            return apology("must provide username", 403)
-
-        # Ensure password was submitted
-        elif not request.form.get("password"):
-            return apology("must provide password", 403)
-
-        # Query database for username
-        rows = db.execute(
-            "SELECT * FROM users WHERE username = ?", request.form.get("username")
-        )
-
-        # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(
-            rows[0]["hash"], request.form.get("password")
-        ):
-            return apology("invalid username and/or password", 403)
-
-        # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
-
-        # Redirect user to home page
-        return redirect("/")
-
-    # User reached route via GET (as by clicking a link or via redirect)
-    else:
-        return render_template("login.html")
-'''
-
 # Login
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -147,32 +107,6 @@ def register():
     else:
         return render_template("register.html")
 
-
-'''
-# Register
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        confirmation = request.form.get("confirmation")
-
-        if not username or not password or not confirmation:
-            return apology("must fill all fields")
-        if password != confirmation:
-            return apology("passwords do not match")
-
-        hash_pwd = generate_password_hash(password)
-        try:
-            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, hash_pwd)
-        except:
-            return apology("username already exists")
-
-        return redirect("/login")
-
-    return render_template("register.html")
-    '''
-
 # Logout
 @app.route("/logout")
 def logout():
@@ -205,41 +139,6 @@ def profile():
     # Pass data to the template
     return render_template("profile.html", name=username, reviews=reviews, songs=liked_songs)
 
-'''
-@app.route("/review", methods=["POST"])
-@login_required
-def review():
-    try:
-        # Retrieve and validate form data
-        song_id = request.form.get("song_id")
-        review_text = request.form.get("review")
-        rating = request.form.get("rating")
-
-        song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
-        if not song:
-            error_message = "Song does not exist."
-            return render_template("song.html", error_message=error_message)
-
-        if not song_id or not review_text or not rating:
-            error_message = "All fields are required."
-            return render_template("song.html", error_message=error_message)
-
-        if not rating.isdigit() or not (1 <= int(rating) <= 5):
-            error_message = "Rating must be a number between 1 and 5."
-            return render_template("song.html", error_message=error_message)
-
-        # Insert review into the database
-        db.execute(
-            "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
-            session["user_id"], song_id, review_text, int(rating)
-        )
-        return redirect("/profile")
-
-    except Exception as e:
-        print(f"Error: {e}")  # Debugging
-        error_message = "An error occurred while submitting your review."
-        return render_template("profile.html", error_message=error_message)
-'''
 @app.route("/search", methods=["GET", "POST"])
 def search():
     if request.method == "POST":
@@ -282,39 +181,6 @@ def search():
 
     # For GET requests, just render the empty search page
     return render_template("search.html")
-
-'''
-@app.route("/search", methods=["GET", "POST"])
-def search():
-    if request.method == "POST":
-        # Get song name and artist from the form
-        song_name = request.form.get("song_name")
-        artist = request.form.get("artist")
-
-        # Validate at least one field is filled
-        if not song_name and not artist:
-            error_message = "Must provide at least a song name or artist."
-            return render_template("search.html", error_message=error_message)
-
-        # Construct query for Spotify search
-        query = f"track:{song_name}" if song_name else ""
-        if artist:
-            query += f" artist:{artist}"
-
-        # Make the API request to Spotify
-        results = sp.search(q=query, type="track", limit=10)  # Limit to 10 results
-
-        if results['tracks']['items']:
-            songs = results['tracks']['items']
-        else:
-            error_message = "No songs found matching the search."
-            return render_template("search.html", error_message=error_message)
-
-        return render_template("search.html", songs=songs)
-
-    # For GET requests, just render the empty search page
-    return render_template("search.html")
-'''
 
 @app.route("/song/<song_id>", methods=["GET", "POST"])
 def song_details(song_id):
@@ -389,39 +255,6 @@ def song_details(song_id):
         error_message = "An unexpected error occurred while fetching song details."
         return render_template("song.html", error_message=error_message)
 
-
-
-'''
-@app.route("/song/<song_id>")
-def song_details(song_id):
-    try:
-        # Fetch song details from Spotify API using song_id
-        song = sp.track(song_id)
-
-        # Check if the song data is returned as expected
-        if not song:
-            error_message = "Song not found."
-            return render_template("song.html", error_message=error_message)
-
-        # Fetch reviews from your database
-        conn = get_db_connection()
-        reviews = conn.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", (song_id,)).fetchall()
-        conn.close()
-
-        # Calculate average rating
-        ratings = [review["rating"] for review in reviews]
-        average_rating = sum(ratings) / len(ratings) if ratings else None
-
-        # Render the song page with the retrieved song and reviews
-        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
-
-    except Exception as e:
-        print(f"Error: {e}")  # Debugging
-        error_message = "An unexpected error occurred while fetching song details."
-        return render_template("song.html", error_message=error_message)
-'''
-
-
 @app.route("/song/<song_id>/review", methods=["POST"])
 @login_required
 def add_review(song_id):
@@ -476,6 +309,19 @@ def like_song():
     db.execute("INSERT OR IGNORE INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
 
     return redirect(f"/song/{song_id}")
+
+@app.route("/liked_songs")
+@login_required
+def liked_songs():
+    """Display a list of songs liked by the user."""
+    # Query the database to fetch the liked songs of the logged-in user
+    liked_songs = db.execute(
+        "SELECT songs.title, songs.artist FROM songs "
+        "JOIN likes ON songs.id = likes.song_id WHERE likes.user_id = ?",
+        session["user_id"]
+    )
+    return render_template("liked_songs.html", songs=liked_songs)
+
 
 
 if __name__ == "__main__":
