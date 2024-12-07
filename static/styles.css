@@ -120,19 +120,18 @@ header {
 .heart-icon {
     font-size: 2rem; /* Adjust size of the heart */
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease; /* Smooth transition for color change */
 }
 
-/* Empty heart */
-.heart-icon.empty {
+/* Empty heart (initially far fa-heart class) */
+.far.fa-heart {
     color: #ccc; /* Light gray color for empty heart */
 }
 
-/* Filled heart */
-.heart-icon.filled {
+/* Filled heart (fa-heart class) */
+.fa-heart {
     color: red; /* Red color for filled heart */
 }
-
 
 
 /* Fonts */
