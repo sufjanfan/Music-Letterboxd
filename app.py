@@ -248,26 +248,6 @@ def search():
         if results['tracks']['items']:
             songs = results['tracks']['items']
 
-            # Insert each song into the database if it doesn't already exist
-            for song in songs:
-                song_id = song['id']
-                title = song['name']
-                artist_name = song['artists'][0]['name']
-
-                # Debugging output to ensure the values are correct
-                print(f"Inserting song: {song_id}, {title}, {artist_name}")
-
-                # Ensure the variables are correct
-                if song_id and title and artist_name:
-                    # Check if the song already exists in the database
-                    existing_song = db.execute("SELECT * FROM songs WHERE id = ?", (song_id,))
-                    if not existing_song:
-                        # Insert the song into the database if it doesn't exist
-                        db.execute("INSERT INTO songs (id, title, artist) VALUES (?, ?, ?)",
-                                   (song_id, title, artist_name))
-                else:
-                    print("Missing values for song, skipping insertion.")
-
         else:
             error_message = "No songs found matching the search."
             return render_template("search.html", error_message=error_message)

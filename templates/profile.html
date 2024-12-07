@@ -46,6 +46,21 @@
             </ul>
         {% endif %} -->
 
+        {% block title %}
+        Liked Songs
+        {% endblock %}
+
+        {% block body %}
+            <h1>Your Liked Songs</h1>
+            {% if songs %}
+                <ul>
+                    {% for song in songs %}
+                        <li>{{ song.name }} by {{ song.artist }}</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>You haven't liked any songs yet.</p>
+            {% endif %}
         <!-- User Reviews -->
         {% if reviews %}
             <ul>
