@@ -12,19 +12,12 @@
             </div>
         {% else %}
             <h1 class="syne">{{ song['name'] }}</h1>
-            <!-- Check if the song is already liked -->
-            {% set liked = false %}
-            {% for liked_song in liked_songs %}
-                {% if liked_song.name == song.title %}
-                    {% set liked = true %}
-                {% endif %}
-            {% endfor %}
 
             <!-- Heart Icon for Liking the Song -->
             <form id="like-form-{{ song.id }}" action="/like" method="POST" class="like-form">
                 <input type="hidden" name="song_id" value="{{ song.id }}">
-                <!-- Using Font Awesome Heart Icon -->
-                <i id="heart-icon-{{ song.id }}" class="heart-icon fa {% if liked %}fa-heart{% else %}fa-heart-o{% endif %}" onclick="likeSong('{{ song.id }}')"></i>
+                <!-- Font Awesome Heart Icon (Empty or Filled) -->
+                <i id="heart-icon-{{ song.id }}" class="heart-icon fa-solid {% if liked_status %}fa-heart{% else %}far fa-heart{% endif %}" data-song-id="{{ song.id }}"></i>
             </form>
 
             <br>

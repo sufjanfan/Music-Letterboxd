@@ -118,21 +118,26 @@ header {
 
 /* Heart icon styling */
 .heart-icon {
+    display: inline-block;
+    font-family: "Font Awesome 5 Free", "FontAwesome", sans-serif; /* Ensure correct font for icons */
+    font-weight: 900; /* Font Awesome solid icons weight for filled hearts */
+    font-style: normal;
     font-size: 2rem; /* Adjust size of the heart */
     cursor: pointer;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease; /* Smooth transition for color change */
+    line-height: 1;
+    padding: 0;
 }
 
 /* Empty heart */
-.heart-icon.empty {
-    color: #ccc; /* Light gray color for empty heart */
+.far.fa-heart {
+    color: #ccc; /* Light gray for empty heart */
 }
 
 /* Filled heart */
-.heart-icon.filled {
+.fa-heart {
     color: red; /* Red color for filled heart */
 }
-
 
 
 /* Fonts */

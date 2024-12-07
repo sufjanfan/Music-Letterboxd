@@ -210,6 +210,14 @@ def song_details(song_id):
             error_message = "Song not found."
             return render_template("song.html", error_message=error_message)
 
+        # Check if the song is liked by the user
+        liked_song = db.execute(
+            "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
+            session["user_id"], song_id
+        )
+
+        liked_status = True if liked_song else False
+
         # Fetch reviews from your database
         conn = get_db_connection()
         reviews = conn.execute(
@@ -264,7 +272,7 @@ def song_details(song_id):
         average_rating = round(sum(ratings) / len(ratings), 2) if ratings else None
 
         # Render the song page with the retrieved song and reviews
-        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
+        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating, liked_status=liked_status)
 
     except Exception as e:
         print(f"Error: {e}")  # Debugging
@@ -320,35 +328,38 @@ def recent():
     """)
     return render_template("recent.html", reviews=reviews)
 
+
 @app.route("/like", methods=["POST"])
 @login_required
 def like_song():
     song_id = request.form.get("song_id")
+
     if not song_id:
-        error_message = "Song ID required."
-        return render_template("song.html", error_message=error_message, song_id=song_id)
+        return jsonify({"error": "Song ID required."}), 400
 
     # Check if the song exists
     song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
     if not song:
-        error_message = "Song not found."
-        return render_template("song.html", error_message=error_message, song_id=song_id)
+        return jsonify({"error": "Song not found."}), 404
 
     # Check if the song is already liked by the user
     already_liked = db.execute(
         "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
-        (session["user_id"], song_id)
+        session["user_id"], song_id
     )
 
     if len(already_liked) == 0:
         # If not liked yet, add the song to likes
         db.execute("INSERT INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
+        liked = True
     else:
         # If already liked, remove it from likes
         db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
+        liked = False
 
-    db.commit()  # Save the change
-    return redirect(f"/song/{song_id}")
+    # Return a JSON response with the updated like status
+    return jsonify({"liked": liked})
+
 
 
 @app.route("/all_liked")
