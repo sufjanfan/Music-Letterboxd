@@ -31,7 +31,7 @@
             <tbody>
                 {% for song in songs %}
                     <tr>
-                        <td><a href="{{ url_for('song_details', song_id=song.id) }}"><strong>{{ song.name }}</strong></a></td>
+                        <td><strong>{{ song.name }}</strong></a></td>
                         <td>{{ song.artists[0].name }}</td>
                         <td>
                             <a href="{{ song.external_urls.spotify }}" target="_blank">Listen on Spotify</a> |
