@@ -26,6 +26,7 @@
               <strong>{{ song.name }}</strong> by {{ song.artists[0].name }}
               <br>
               <a href="{{ song.external_urls.spotify }}" target="_blank">Listen on Spotify</a>
+              <a href="{{ url_for('add_review', song_id=song.id) }}">Add Review</a>
             </li>
           {% endfor %}
         {% else %}
