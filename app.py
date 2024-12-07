@@ -339,8 +339,8 @@ def like_song():
 
     # Check if the song is already liked by the user
     already_liked = db.execute(
-        "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
-        (session["user_id"], song_id)  # Ensure this is a tuple with two values
+        "SELECT * FROM likes WHERE user_id = ?",
+        (session["user_id"],)  # Only passing one value (the user_id)
     )
 
     # Debugging output for the query result
