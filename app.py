@@ -210,6 +210,14 @@ def song_details(song_id):
             error_message = "Song not found."
             return render_template("song.html", error_message=error_message)
 
+        # Check if the song is liked by the user
+        liked_song = db.execute(
+            "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
+            session["user_id"], song_id
+        )
+
+        liked_status = True if liked_song else False
+
         # Fetch reviews from your database
         conn = get_db_connection()
         reviews = conn.execute(
@@ -264,7 +272,7 @@ def song_details(song_id):
         average_rating = round(sum(ratings) / len(ratings), 2) if ratings else None
 
         # Render the song page with the retrieved song and reviews
-        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
+        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating, liked_status=liked_status)
 
     except Exception as e:
         print(f"Error: {e}")  # Debugging
