@@ -291,10 +291,6 @@ def add_review(song_id):
             error_message = "Rating must be a number between 1 and 5."
             return render_template("song.html", error_message=error_message, song_id=song_id)
 
-        # Get song details (title and artist)
-        song_title = song["name"]
-        song_artist = ", ".join([artist["name"] for artist in song["artists"]])
-
         # Insert review into the database, including the song title and artist
         conn = get_db_connection()
         conn.execute(
