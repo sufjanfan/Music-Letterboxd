@@ -6,30 +6,20 @@
     <br>
 
     {% if reviews %}
-        <table class="table table-striped mt-4">
-            <thead class="table-light">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Song</th>
-                    <th scope="col">Artist</th>
-                    <th scope="col">Review</th>
-                    <th scope="col">Rating</th>
-                    <th scope="col">Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for review in reviews %}
-                <tr>
-                    <th scope="row">{{ loop.index }}</th>
-                    <td>{{ review.song_title }}</td>
-                    <td>{{ review.song_artist }}</td>
-                    <td>{{ review.review }}</td>
-                    <td>{{ review.rating }} / 5</td>
-                    <td>{{ review.timestamp }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for review in reviews %}
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ review.song_title }} by {{ review.song_artist }}</h5>
+                            <p class="card-text"><strong>Rating:</strong> {{ review.rating }} / 5</p>
+                            <p class="card-text">{{ review.review }}</p>
+                            <p class="card-text"><small class="text-muted">Reviewed on: {{ review.timestamp }}</small></p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     {% else %}
         <p class="text-muted">You haven't written any reviews yet.</p>
     {% endif %}
