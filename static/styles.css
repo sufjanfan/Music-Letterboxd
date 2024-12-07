@@ -125,6 +125,8 @@ header {
     font-size: 2rem; /* Adjust size of the heart */
     cursor: pointer;
     transition: color 0.3s ease; /* Smooth transition for color change */
+    line-height: 1;
+    padding: 0;
 }
 
 /* Empty heart */
