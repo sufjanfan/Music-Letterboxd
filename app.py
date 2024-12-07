@@ -261,7 +261,7 @@ def song_details(song_id):
 
         # Calculate average rating
         ratings = [review["rating"] for review in reviews]
-        average_rating = sum(ratings) / len(ratings) if ratings else None
+        average_rating = round(sum(ratings) / len(ratings), 2) if ratings else None
 
         # Render the song page with the retrieved song and reviews
         return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
