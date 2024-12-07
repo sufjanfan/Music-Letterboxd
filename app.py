@@ -190,6 +190,7 @@ def profile():
     reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
     return render_template("profile.html", name=username, reviews=reviews)
 
+'''
 @app.route("/review", methods=["POST"])
 @login_required
 def review():
@@ -223,7 +224,7 @@ def review():
         print(f"Error: {e}")  # Debugging
         error_message = "An error occurred while submitting your review."
         return render_template("profile.html", error_message=error_message)
-
+'''
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
