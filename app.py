@@ -179,27 +179,40 @@ def profile():
     reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
     return render_template("profile.html", reviews=reviews)
 
-# Add Review
 @app.route("/review", methods=["POST"])
 @login_required
 def review():
-    song_id = request.form.get("song_id")  # Assuming song_id is sent from the form
+    # Retrieve form data
+    song_id = request.form.get("song_id")  # Ensure this field is in the HTML form
     review_text = request.form.get("review")
     rating = request.form.get("rating")
 
+    # Validate input
     if not song_id or not review_text or not rating:
         return apology("must fill all fields")
 
     try:
+        # Convert rating to an integer
+        rating = int(rating)
+
+        # Check if song_id exists in the database
+        song = db.execute("SELECT * FROM songs WHERE id = ?", song_id)
+        if not song:
+            return apology("Song not found")
+
+        # Insert the review into the database
         db.execute(
             "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
-            session["user_id"], song_id, review_text, int(rating)
+            session["user_id"], song_id, review_text, rating
         )
+    except ValueError:
+        return apology("Rating must be an integer")
     except Exception as e:
-        print(f"Error: {e}")  # Debugging
+        print(f"Error inserting review: {e}")  # Debugging
         return apology("An error occurred while submitting your review")
 
     return redirect("/profile")
+
 
 
 @app.route("/search", methods=["GET", "POST"])
