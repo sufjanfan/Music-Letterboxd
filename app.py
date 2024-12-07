@@ -196,7 +196,7 @@ def review():
         song_id = request.form.get("song_id")
         review_text = request.form.get("review")
         rating = request.form.get("rating")
-
+        
         if not song_id or not review_text or not rating:
             return apology("All fields are required", 400)
 
