@@ -340,6 +340,19 @@ def song_details(song_id):
                 error_message = "Rating must be a number between 1 and 5."
                 return render_template("song.html", error_message=error_message, song=song, reviews=reviews)
 
+            # Check if the user has already reviewed this song
+            conn = get_db_connection()
+            existing_review = conn.execute(
+                "SELECT * FROM reviews WHERE user_id = ? AND song_id = ?",
+                (session["user_id"], song_id)
+            ).fetchone()
+
+            if existing_review:
+                error_message = "You have already reviewed this song."
+                conn.close()
+                return render_template("song.html", error_message=error_message, song=song, reviews=reviews)
+
+
             # Insert review into the database
             conn = get_db_connection()
             conn.execute(
