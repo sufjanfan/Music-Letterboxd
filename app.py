@@ -254,16 +254,15 @@ def song_details(song_id):
 @app.route("/song/<song_id>/review", methods=["POST"])
 @login_required
 def add_review(song_id):
-    title = request.form.get("title")
     review_text = request.form.get("review")
     rating = request.form.get("rating")
 
-    if not title or not review_text or not rating:
+    if not review_text or not rating:
         return apology("must fill all fields")
 
     db.execute(
-        "INSERT INTO reviews (user_id, song_id, title, review, rating) VALUES (?, ?, ?, ?, ?)",
-        session["user_id"], song_id, title, review_text, rating
+        "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
+        session["user_id"], song_id, review_text, rating
     )
     return redirect(f"/song/{song_id}")
 

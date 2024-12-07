@@ -13,7 +13,6 @@
 
 <h2>Submit a Review</h2>
 <form method="post" action="/song/{{ song['id'] }}/review">
-    <input type="text" name="title" placeholder="Title">
     <textarea name="review" placeholder="Your review"></textarea>
     <input type="number" name="rating" min="1" max="5">
     <button type="submit">Submit</button>
