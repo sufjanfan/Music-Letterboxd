@@ -277,8 +277,8 @@ def add_review(song_id):
         # Insert review into the database, including the song title and artist
         conn = get_db_connection()
         conn.execute(
-            "INSERT INTO reviews (review, rating, user_id, song_id, song_title, song_artist, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
-            (session["user_id"], song_id, review_text, int(rating), song_title, song_artist)
+            "INSERT INTO reviews (review, rating, user_id, song_id, timestamp) VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
+            (session["user_id"], song_id, review_text, int(rating))
         )
         conn.commit()
         conn.close()
