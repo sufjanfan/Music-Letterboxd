@@ -14,8 +14,8 @@
     <div>
         <p>Rate and review your favorite songs.</p>
         {% if not session.get("user_id") %}
-            <a href="/login" class="btn">Login</a>
-            <a href="/register" class="btn">Register</a>
+            <a href="/login" class="btn-login">Login</a>
+            <a href="/register" class="btn-login">Register</a>
         {% else %}
             <a href="/profile" class="btn">Go to Profile</a>
         {% endif %}
