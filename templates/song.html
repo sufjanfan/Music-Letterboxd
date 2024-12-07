@@ -23,7 +23,7 @@
             <!-- Heart Icon for Liking the Song -->
             <form id="like-form-{{ song.id }}" action="/like" method="POST" class="like-form">
                 <input type="hidden" name="song_id" value="{{ song.id }}">
-                <!-- Using Font Awesome Heart Icon -->
+                <!-- Font Awesome Heart Icon (Empty or Filled) -->
                 <i id="heart-icon-{{ song.id }}" class="heart-icon fa {% if liked %}fa-heart{% else %}far fa-heart{% endif %}" onclick="likeSong('{{ song.id }}')"></i>
             </form>
 

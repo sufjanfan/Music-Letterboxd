@@ -319,43 +319,36 @@ def recent():
         JOIN songs ON reviews.song_id = songs.id
     """)
     return render_template("recent.html", reviews=reviews)
-
 @app.route("/like", methods=["POST"])
 @login_required
 def like_song():
     song_id = request.form.get("song_id")
 
     if not song_id:
-        error_message = "Song ID required."
-        return render_template("song.html", error_message=error_message, song_id=song_id)
+        return jsonify({"error": "Song ID required."}), 400
 
     # Check if the song exists
     song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
     if not song:
-        error_message = "Song not found."
-        return render_template("song.html", error_message=error_message, song_id=song_id)
-
-    # Print user ID and song ID for debugging
-    print(f"User ID: {session['user_id']}, Song ID: {song_id}")  # Debugging output
+        return jsonify({"error": "Song not found."}), 404
 
     # Check if the song is already liked by the user
     already_liked = db.execute(
         "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
-        session["user_id"], song_id  # No need to wrap in a tuple here
+        session["user_id"], song_id
     )
-
-    # Debugging: Check the result of the query
-    print(f"Already liked: {already_liked}")
 
     if len(already_liked) == 0:
         # If not liked yet, add the song to likes
         db.execute("INSERT INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
+        liked = True
     else:
         # If already liked, remove it from likes
         db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
+        liked = False
 
-    return redirect(f"/song/{song_id}")
-
+    # Return a JSON response with the updated like status
+    return jsonify({"liked": liked})
 
 @app.route("/all_liked")
 @login_required

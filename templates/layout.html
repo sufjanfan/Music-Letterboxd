@@ -14,20 +14,33 @@
         <script>
             function likeSong(songId) {
                 var heartIcon = document.getElementById('heart-icon-' + songId);
-                var form = document.getElementById('like-form-' + songId);
 
-                // Toggle the heart icon between filled and empty
-                if (heartIcon.classList.contains('fa-heart')) {
-                    heartIcon.classList.remove('fa-heart');
-                    heartIcon.classList.add('far', 'fa-heart');
-                } else {
-                    heartIcon.classList.remove('far', 'fa-heart');
-                    heartIcon.classList.add('fa-heart');
-                }
-
-                // Submit the form to like the song
-                form.submit();
+                // Send AJAX request to like/unlike the song
+                fetch('/like', {
+                    method: 'POST',
+                    body: new URLSearchParams({
+                        song_id: songId
+                    }),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Check the response from the server and toggle the heart icon
+                    if (data.liked) {
+                        heartIcon.classList.remove('far', 'fa-heart');
+                        heartIcon.classList.add('fa-heart');
+                    } else {
+                        heartIcon.classList.remove('fa-heart');
+                        heartIcon.classList.add('far', 'fa-heart');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             }
+
 
         </script>
 
