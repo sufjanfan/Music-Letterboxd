@@ -21,20 +21,15 @@
     <br>
 
     <h2>Submit a Review</h2>
-    <form action="/search" method="post">
+    <form action="/song/{{ song['id'] }}/review" method="post">
         <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" name="song_name" placeholder="Song Name" type="text">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="review" placeholder="Your review" type="text">
         </div>
         <div class="mb-3">
-            <input autocomplete="off" class="form-control mx-auto w-auto" name="artist" placeholder="Artist" type="text">
+            <input autocomplete="off" class="form-control mx-auto w-auto" min="1" max="5" name="rating" placeholder="-" type="number">
         </div>
-        <button class="btn btn-primary" type="submit">Search</button>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </form>
-        <form method="post" action="/song/{{ song['id'] }}/review">
-            <textarea name="review" placeholder="Your review"></textarea>
-            <input type="number" name="rating" min="1" max="5">
-            <button type="submit">Submit</button>
-        </form>
 
     <br>
     {% if error_message %}
