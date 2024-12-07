@@ -128,7 +128,18 @@ def profile():
     # Retrieve the username
     username = user[0]["username"]
 
-    reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
+    reviews = db.execute(
+        """
+        SELECT reviews.rating, reviews.timestamp, reviews.review,
+            songs.title AS song_title, songs.artist AS song_artist
+        FROM reviews
+        JOIN songs ON reviews.song_id = songs.id
+        WHERE reviews.user_id = ?
+        """,
+        (session["user_id"],)
+    )
+
+    # reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
     # Fetch user's liked songs
     liked_songs = db.execute(
         "SELECT songs.title AS name, songs.artist FROM songs "
