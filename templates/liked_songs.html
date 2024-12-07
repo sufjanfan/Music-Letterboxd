@@ -10,8 +10,15 @@
                         {% for song in songs %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong>{{ song.title }}</strong><br>
-                                    <span class="text-muted">by {{ song.artist }}</span>
+                                    {% if songs %}
+                                    <ul>
+                                        {% for song in songs %}
+                                            <li>{{ song.name }} by {{ song.artist }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p>You haven't liked any songs yet.</p>
+                                {% endif %}
                                 </div>
                             </li>
                         {% endfor %}
