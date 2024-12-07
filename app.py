@@ -315,7 +315,8 @@ def add_review(song_id):
 @app.route("/recent", methods=["POST"])
 @login_required
 def recent():
-    return apology("An error occurred while submitting your review", 500)
+    reviews = db.execute("SELECT * FROM reviews")
+    return render_template("recent.html", reviews=reviews)
 
 
 if __name__ == "__main__":
