@@ -9,58 +9,18 @@
         <h1 class="syne">{{ name }}'s<br>music box</h1>
         <br>
 
-        <!-- Song Search Form -->
-        <!-- <form action="/profile" method="POST">
-            <div>
-                <label for="song_name">Song Name:</label>
-                <input type="text" name="song_name" id="song_name" placeholder="Enter song name">
-            </div>
-            <div>
-                <label for="artist">Artist:</label>
-                <input type="text" name="artist" id="artist" placeholder="Enter artist name">
-            </div>
-            <button type="submit">Search</button>
-        </form>
+        <!-- Liked Songs -->
+        <h1>Your Liked Songs</h1>
         {% if songs %}
-            <h3>Search Results</h3>
             <ul>
                 {% for song in songs %}
-                    <li>
-                        <strong>{{ song['title'] }}</strong> by {{ song['artist-credit'][0]['name'] }}
-                        <form action="/review" method="POST">
-                            <input type="hidden" name="song_id" value="{{ song['id'] }}">
-                            <label for="review_{{ song['id'] }}">Review:</label>
-                            <input type="text" name="review" id="review_{{ song['id'] }}" required>
-                            <label for="rating_{{ song['id'] }}">Rating:</label>
-                            <select name="rating" id="rating_{{ song['id'] }}">
-                                <option value="1">1</option>
-                                <option value="2">2</option>
-                                <option value="3">3</option>
-                                <option value="4">4</option>
-                                <option value="5">5</option>
-                            </select>
-                            <button type="submit">Submit Review</button>
-                        </form>
-                    </li>
+                    <li>{{ song.name }} by {{ song.artist }}</li>
                 {% endfor %}
             </ul>
-        {% endif %} -->
+        {% else %}
+            <p>You haven't liked any songs yet.</p>
+        {% endif %}
 
-        {% block title %}
-        Liked Songs
-        {% endblock %}
-
-        {% block body %}
-            <h1>Your Liked Songs</h1>
-            {% if songs %}
-                <ul>
-                    {% for song in songs %}
-                        <li>{{ song.name }} by {{ song.artist }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>You haven't liked any songs yet.</p>
-            {% endif %}
         <!-- User Reviews -->
         {% if reviews %}
             <ul>
@@ -74,13 +34,13 @@
         {% else %}
             <p>No reviews yet.</p>
         {% endif %}
+
     </div>
 
     <br>
     {% if error_message %}
-    <div class="alert alert-danger" role="alert">
-        {{ error_message }}
-    </div>
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
     {% endif %}
-
-    {% endblock %}
+{% endblock %}

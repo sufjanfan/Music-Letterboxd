@@ -285,7 +285,7 @@ def song_details(song_id):
         return render_template("song.html", error_message=error_message)
 
 
-@app.route("/song/<song_id>/review", methods=["POST"])
+@app.route("/song/<song_id>/review")
 @login_required
 def add_review(song_id):
     try:
