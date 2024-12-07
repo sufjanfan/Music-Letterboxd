@@ -321,10 +321,10 @@ def add_review(song_id):
         if not review_text or not rating:
             error_message = "All fields are required."
             return render_template("song.html", error_message=error_message)
-            return apology("All fields are required", 400)
 
         if not rating.isdigit() or not (1 <= int(rating) <= 5):
-            return apology("Rating must be a number between 1 and 5", 400)
+            error_message = "Rating must be a number between 1 and 5."
+            return render_template("song.html", error_message=error_message)
 
         # Insert review into the database
         db.execute(
@@ -335,7 +335,8 @@ def add_review(song_id):
 
     except Exception as e:
         print(f"Error: {e}")  # Debugging
-        return apology("An error occurred while submitting your review", 500)
+        error_message = "An error occurred while submitting your review."
+        return render_template("profile.html", error_message=error_message)
 
 @app.route("/recent")
 @login_required

@@ -18,4 +18,12 @@
         </div>
         <button class="btn btn-primary" type="submit">Log In</button>
     </form>
+
+    {% if error_message %}
+    <div class="alert alert-danger" role="alert">
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    
 {% endblock %}
