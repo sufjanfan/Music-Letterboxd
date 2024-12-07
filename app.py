@@ -247,7 +247,6 @@ def search():
 
         if results['tracks']['items']:
             songs = results['tracks']['items']
-
         else:
             error_message = "No songs found matching the search."
             return render_template("search.html", error_message=error_message)
@@ -318,7 +317,7 @@ def add_review(song_id):
 def recent():
     reviews = db.execute("SELECT * FROM reviews")
     return render_template("recent.html", reviews=reviews)
-
+'''
 @app.route("/like", methods=["POST"])
 @login_required
 def like_song():
@@ -347,7 +346,7 @@ def liked_songs():
             session["user_id"]
         )
         return render_template("liked_songs.html", songs=liked_songs)
-
+'''
 
 if __name__ == "__main__":
     app.run(debug=True)
