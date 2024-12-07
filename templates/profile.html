@@ -5,9 +5,15 @@
     <h2>Your Profile</h2>
 
     <h3>Search Songs to Rate and Review</h3>
-    <form action="/profile" method="post">
-        <label for="query">Search:</label>
-        <input type="text" name="query" id="query" placeholder="Enter song name" required>
+    <form action="/profile" method="POST">
+        <div>
+            <label for="song_name">Song Name:</label>
+            <input type="text" name="song_name" id="song_name">
+        </div>
+        <div>
+            <label for="artist">Artist:</label>
+            <input type="text" name="artist" id="artist">
+        </div>
         <button type="submit">Search</button>
     </form>
 
