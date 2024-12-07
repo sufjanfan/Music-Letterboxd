@@ -135,9 +135,10 @@ def profile():
         "JOIN likes ON songs.id = likes.song_id WHERE likes.user_id = ?",
         session["user_id"]
     )
-     # Retrieve only the latest five reviews for display
+
+    # Fetch the user's 5 most recent reviews
     reviews = db.execute(
-        "SELECT * FROM reviews WHERE user_id = ? ORDER BY id DESC LIMIT 5",
+        "SELECT * FROM reviews WHERE user_id = ? ORDER BY created_at DESC LIMIT 5",
         session["user_id"]
     )
 
