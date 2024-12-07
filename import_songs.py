@@ -4,16 +4,6 @@ import requests
 # Initialize the database connection
 db = SQL("sqlite:///songs.db")
 
-# Ensure the table has a 'track_id' column
-db.execute("""
-    CREATE TABLE IF NOT EXISTS songs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT NOT NULL,
-        artist TEXT NOT NULL,
-        track_id TEXT UNIQUE
-    )
-""")
-
 def fetch_songs():
     # Fetch songs from MusicBrainz API
     response = requests.get("https://musicbrainz.org/ws/2/recording?query=pop&fmt=json")
@@ -26,7 +16,7 @@ def populate_songs():
     for song in songs:
         title = song["title"]
         artist = song["artist-credit"][0]["name"]
-        id = song["id"]  # Extract the track ID
+        track_id = song["id"]  # Extract the track ID
         try:
             # Insert into the songs table
             db.execute(
