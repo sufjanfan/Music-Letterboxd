@@ -5,13 +5,13 @@ import requests
 db = SQL("sqlite:///songs.db")
 
 # Ensure the table has a 'track_id' column
-db.execute("""
+db.execute(
     CREATE TABLE IF NOT EXISTS songs (
         id INTEGER PRIMARY KEY,
         title TEXT NOT NULL,
         artist TEXT NOT NULL,
     )
-""")
+)
 
 def fetch_songs():
     # Fetch songs from MusicBrainz API
