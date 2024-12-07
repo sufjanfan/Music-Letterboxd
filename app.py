@@ -3,11 +3,11 @@ from flask import Flask, render_template, request, redirect, session, jsonify
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
-import requests
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
 
 # Configure Flask app
 app = Flask(__name__)
-
 
 # Configure session
 app.config["SESSION_PERMANENT"] = False
@@ -16,6 +16,13 @@ Session(app)
 
 # Configure SQLite database
 db = SQL("sqlite:///songs.db")
+
+# Spotify API credentials
+SPOTIPY_CLIENT_ID = "88374e1393b6458790e3cf67005fc5a8"
+SPOTIPY_CLIENT_SECRET = "570bec319d274b14a3048a93ad58bb16"
+
+# Initialize Spotify client
+sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET))
 
 # Homepage
 @app.route("/")
