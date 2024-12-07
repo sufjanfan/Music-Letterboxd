@@ -318,11 +318,10 @@ def add_review(song_id):
 def recent():
     reviews = db.execute("SELECT * FROM reviews")
     return render_template("recent.html", reviews=reviews)
-'''
+
 @app.route("/like", methods=["POST"])
 @login_required
 def like_song():
-    try:
         song_id = request.form.get("song_id")
         if not song_id:
             return jsonify({"error": "Song ID is required"}), 400
@@ -340,14 +339,13 @@ def like_song():
 @app.route("/liked_songs")
 @login_required
 def liked_songs():
-    try:
         # Retrieve all liked songs for the current user
         liked_songs = db.execute(
             "SELECT songs.* FROM songs JOIN likes ON songs.id = likes.song_id WHERE likes.user_id = ?",
             session["user_id"]
         )
         return render_template("liked_songs.html", songs=liked_songs)
-'''
+
 
 if __name__ == "__main__":
     app.run(debug=True)
