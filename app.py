@@ -237,23 +237,20 @@ def search():
             error_message = "Must provide at least a song name or artist."
             return render_template("search.html", error_message=error_message)
 
-        # Construct the query for the MusicBrainz API
-        query = ""
-        if song_name:
-            query += f'title:"{song_name}"'
+        # Construct query for Spotify search
+        query = f"track:{song_name}" if song_name else ""
         if artist:
-            if query:
-                query += " AND "
-            query += f'artist:"{artist}"'
+            query += f" artist:{artist}"
 
-        # Make the API request
-        response = requests.get(f"https://musicbrainz.org/ws/2/recording/?query={query}&fmt=json")
-        if response.status_code != 200:
-            error_message = "MusicBrainz API error."
+        # Make the API request to Spotify
+        results = sp.search(q=query, type="track", limit=10)  # Limit to 10 results
+
+        if results['tracks']['items']:
+            songs = results['tracks']['items']
+        else:
+            error_message = "No songs found matching the search."
             return render_template("search.html", error_message=error_message)
 
-        # Get the list of songs
-        songs = response.json().get("recordings", [])
         return render_template("search.html", songs=songs)
 
     return render_template("search.html")
