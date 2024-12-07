@@ -19,15 +19,19 @@
     </form>
 
     <br>
-    {% if songs %}
-        <ul>
-        {% for song in songs %}
+    <ul>
+        {% if songs %}
+          {% for song in songs %}
             <li>
-                <a href="/song/{{ song['id'] }}">{{ song['title'] }} by {{ song['artist-credit'][0]['artist']['name'] }}</a>
+              <strong>{{ song.name }}</strong> by {{ song.artists[0].name }}
+              <br>
+              <a href="{{ song.external_urls.spotify }}" target="_blank">Listen on Spotify</a>
             </li>
-        {% endfor %}
-        </ul>
-    {% endif %}
+          {% endfor %}
+        {% else %}
+          <li>No songs found matching your search.</li>
+        {% endif %}
+      </ul>
 
     <br>
     {% if error_message %}
