@@ -341,7 +341,7 @@ def like_song():
     # Check if the song is already liked by the user
     already_liked = db.execute(
         "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
-        (session["user_id"], song_id)  # Tuple with exactly two values
+        session["user_id"], song_id  # No need to wrap in a tuple here
     )
 
     # Debugging: Check the result of the query
@@ -354,9 +354,7 @@ def like_song():
         # If already liked, remove it from likes
         db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
 
-    # No need for db.commit() here, it will be auto-committed
     return redirect(f"/song/{song_id}")
-
 
 
 @app.route("/all_liked")
