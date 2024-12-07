@@ -17,6 +17,10 @@ p {
     font-size: 20px;
 }
 
+ul {
+    list-style-type: none;
+}
+
 nav .navbar-brand {
     font-size: xx-large;
     font-family: "Space Mono";
