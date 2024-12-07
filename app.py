@@ -254,7 +254,6 @@ def song_details(song_id):
 @app.route("/song/<song_id>/review", methods=["POST"])
 @login_required
 def add_review(song_id):
-    title = request.form.get("title")
     review_text = request.form.get("review")
     rating = request.form.get("rating")
 
