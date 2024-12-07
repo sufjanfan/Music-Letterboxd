@@ -321,7 +321,11 @@ def song_details(song_id):
 
         # Fetch reviews from your database
         conn = get_db_connection()
-        reviews = conn.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", (song_id,)).fetchall()
+        reviews = conn.execute(
+            "SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?",
+            (song_id,)
+        ).fetchall()
+        conn.close()
 
         # Handle review submission if it's a POST request
         if request.method == "POST":
@@ -337,16 +341,21 @@ def song_details(song_id):
                 return render_template("song.html", error_message=error_message, song=song, reviews=reviews)
 
             # Insert review into the database
+            conn = get_db_connection()
             conn.execute(
                 "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
                 (session["user_id"], song_id, review_text, int(rating))
             )
             conn.commit()
+            conn.close()
 
             # Re-fetch the reviews after insertion
-            reviews = conn.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", (song_id,)).fetchall()
-
-        conn.close()
+            conn = get_db_connection()
+            reviews = conn.execute(
+                "SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?",
+                (song_id,)
+            ).fetchall()
+            conn.close()
 
         # Calculate average rating
         ratings = [review["rating"] for review in reviews]
@@ -359,6 +368,7 @@ def song_details(song_id):
         print(f"Error: {e}")  # Debugging
         error_message = "An unexpected error occurred while fetching song details."
         return render_template("song.html", error_message=error_message)
+
 
 
 '''
