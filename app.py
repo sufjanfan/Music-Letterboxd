@@ -352,7 +352,6 @@ def song_details(song_id):
                 conn.close()
                 return render_template("song.html", error_message=error_message, song=song, reviews=reviews)
 
-
             # Insert review into the database
             conn = get_db_connection()
             conn.execute(
