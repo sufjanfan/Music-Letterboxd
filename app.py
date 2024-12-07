@@ -177,6 +177,54 @@ def review():
     )
     return redirect("/profile")
 
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    if request.method == "POST":
+        query = request.form.get("query")
+        if not query:
+            return apology("must provide search query")
+
+        response = requests.get(f"https://musicbrainz.org/ws/2/recording/?query={query}&fmt=json")
+        if response.status_code != 200:
+            return apology("MusicBrainz API error")
+
+        songs = response.json().get("recordings", [])
+        return render_template("search.html", songs=songs)
+
+    return render_template("search.html")
+
+@app.route("/song/<song_id>")
+def song_details(song_id):
+    # Fetch song details (from external API or local database)
+    response = requests.get(f"https://musicbrainz.org/ws/2/recording/{song_id}?fmt=json")
+    if response.status_code != 200:
+        return apology("MusicBrainz API error")
+
+    song = response.json()
+    # Fetch reviews from the database
+    reviews = db.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", song_id)
+
+    # Calculate average rating
+    ratings = [review["rating"] for review in reviews]
+    average_rating = sum(ratings) / len(ratings) if ratings else None
+
+    return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
+
+@app.route("/song/<song_id>/review", methods=["POST"])
+@login_required
+def add_review(song_id):
+    title = request.form.get("title")
+    review_text = request.form.get("review")
+    rating = request.form.get("rating")
+
+    if not title or not review_text or not rating:
+        return apology("must fill all fields")
+
+    db.execute(
+        "INSERT INTO reviews (user_id, song_id, title, review, rating) VALUES (?, ?, ?, ?, ?)",
+        session["user_id"], song_id, title, review_text, rating
+    )
+    return redirect(f"/song/{song_id}")
 
 
 if __name__ == "__main__":
