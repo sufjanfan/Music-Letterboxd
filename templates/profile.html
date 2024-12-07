@@ -27,20 +27,25 @@
         <!-- User Reviews -->
         <h2>Your Reviews</h2>
         {% if reviews %}
-            <ul>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
                 {% for review in reviews %}
-                    <div>
-                        <p><strong>{{ review.song_title }}</strong> by {{ review.song_artist }}</p>
-                        <p>Rating: {{ review.rating }}</p>
-                        <p>{{ review.review }}</p>
-                        <p>Reviewed on: {{ review.timestamp }}</p>
+                    <div class="col">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ review.song_title }} by {{ review.song_artist }}</h5>
+                                <p class="card-text"><strong>Rating:</strong> {{ review.rating }}</p>
+                                <p class="card-text">{{ review.review }}</p>
+                                <p class="card-text"><small class="text-muted">Reviewed on: {{ review.timestamp }}</small></p>
+                            </div>
+                        </div>
                     </div>
                 {% endfor %}
-            </ul>
+            </div>
         {% else %}
             <p>No reviews yet.</p>
         {% endif %}
-<a href="{{ url_for('all_reviews') }}">View All Reviews</a>
+
+        <a href="{{ url_for('all_reviews') }}">View All Reviews</a>
 
 
     </div>

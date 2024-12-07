@@ -54,6 +54,42 @@ nav .navbar-brand {
     background-color: #0056b3;
 }
 
+/* Additional styling for reviews */
+.card {
+    border: 1px solid #ddd; /* Light border for card */
+    border-radius: 8px; /* Rounded corners */
+    background-color: #f9f9f9; /* Light background */
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.card-text {
+    font-size: 1rem;
+    margin-bottom: 8px;
+}
+
+.card-text small {
+    font-size: 0.85rem;
+    color: #6c757d; /* Muted text color */
+}
+
+.card-body p {
+    margin-bottom: 10px;
+}
+
+.shadow-sm {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Light shadow for cards */
+}
+
+
 body {
     font-family: "Space Mono";
     overflow: visible;
