@@ -209,6 +209,10 @@ def review():
         review_text = request.form.get("review")
         rating = request.form.get("rating")
 
+        song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
+        if not song:
+                return apology("Song does not exist", 400)
+
         if not song_id or not review_text or not rating:
             return apology("All fields are required", 400)
 
