@@ -123,7 +123,7 @@ header {
     transition: color 0.3s ease; /* Smooth transition for color change */
 }
 
-/* Empty heart (initially far fa-heart class) */
+/* Empty heart (far fa-heart class) */
 .far.fa-heart {
     color: #ccc; /* Light gray color for empty heart */
 }
@@ -133,6 +133,12 @@ header {
     color: red; /* Red color for filled heart */
 }
 
+/* Ensure Font Awesome icons are not affected by any unwanted box sizing */
+.heart-icon {
+    display: inline-block; /* Ensure it's treated as an inline element */
+    line-height: 0; /* Ensure no extra height is added */
+    vertical-align: middle; /* Ensure it's aligned correctly with other text/icons */
+}
 
 
 /* Fonts */
