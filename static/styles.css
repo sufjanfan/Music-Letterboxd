@@ -116,6 +116,24 @@ header {
     overflow: visible;  /* Ensure header doesn't clip its content */
 }
 
+/* Heart icon styling */
+.heart-icon {
+    font-size: 2rem; /* Adjust size of the heart */
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+/* Empty heart */
+.heart-icon.empty {
+    color: #ccc; /* Light gray color for empty heart */
+}
+
+/* Filled heart */
+.heart-icon.filled {
+    color: red; /* Red color for filled heart */
+}
+
+
 
 /* Fonts */
 
@@ -148,14 +166,4 @@ header {
     font-family: "Space Mono", monospace;
     font-weight: 700;
     font-style: italic;
-}
-.heart-icon {
-    font-size: 24px;
-    color: #ccc;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.heart-icon.filled {
-    color: red;
 }
