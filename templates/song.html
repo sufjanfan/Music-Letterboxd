@@ -2,7 +2,7 @@
 
 {% block main %}
 
-<h1>{{ song['title'] }} by {{ song['artist-credit'][0]['artist']['name'] }}</h1>
+<h1>{{ song.get('title', 'Unknown Title') }} by {{ song.get('artist-credit', [{}])[0].get('artist', {}).get('name', 'Unknown Artist') }}</h1>
 <p>Average Rating: {{ average_rating or 'No ratings yet' }}</p>
 
 <h2>Reviews</h2>

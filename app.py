@@ -231,20 +231,25 @@ def search():
 
 @app.route("/song/<song_id>")
 def song_details(song_id):
-    # Fetch song details (from external API or local database)
-    response = requests.get(f"https://musicbrainz.org/ws/2/recording/{song_id}?fmt=json")
-    if response.status_code != 200:
-        return apology("MusicBrainz API error")
+    try:
+        # Fetch song details from MusicBrainz API
+        response = requests.get(f"https://musicbrainz.org/ws/2/recording/{song_id}?fmt=json")
+        if response.status_code != 200:
+            print(response.text)  # Debugging
+            return apology("MusicBrainz API error")
 
-    song = response.json()
-    # Fetch reviews from the database
-    reviews = db.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", song_id)
+        song = response.json()
+        # Fetch reviews from the database
+        reviews = db.execute("SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?", song_id)
 
-    # Calculate average rating
-    ratings = [review["rating"] for review in reviews]
-    average_rating = sum(ratings) / len(ratings) if ratings else None
+        # Calculate average rating
+        ratings = [review["rating"] for review in reviews if "rating" in review]
+        average_rating = sum(ratings) / len(ratings) if ratings else None
 
-    return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
+        return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating)
+    except Exception as e:
+        print(f"Error: {e}")  # Debugging
+        return apology("An unexpected error occurred")
 
 @app.route("/song/<song_id>/review", methods=["POST"])
 @login_required
