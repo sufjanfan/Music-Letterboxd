@@ -1,33 +1,28 @@
 {% extends "layout.html" %}
 
 {% block main %}
-    <div class="text-center">
-        <h1 class="mb-4">Your Liked Songs</h1>
-        {% if songs %}
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <ul class="list-group">
-                        {% for song in songs %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    {% if songs %}
-                                    <ul>
-                                        {% for song in songs %}
-                                            <li>{{ likes.name }} by {{ song.artist }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                {% else %}
-                                    <p>You haven't liked any songs yet.</p>
-                                {% endif %}
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        {% else %}
-            <p class="text-muted">You have not liked any songs yet.</p>
-        {% endif %}
-        <a href="/search" class="btn btn-primary mt-4">Find Songs</a>
-    </div>
+<h1 class="syne">Liked Songs</h1>
+
+{% if songs %}
+    <table class="table table-striped mt-4">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Song</th>
+                <th scope="col">Artist</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in songs %}
+            <tr>
+                <th scope="row">{{ loop.index }}</th>
+                <td>{{ song.name }}</td>
+                <td>{{ song.artist }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p class="text-muted">You haven't liked any songs yet.</p>
+{% endif %}
 {% endblock %}
