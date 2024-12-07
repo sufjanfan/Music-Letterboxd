@@ -20,6 +20,8 @@
             {% else %}
                 <p>You haven't liked any songs yet.</p>
             {% endif %}
+<a href="{{ url_for('all_liked') }}">View All Liked Songs</a>
+
 
 
         <!-- User Reviews -->
@@ -37,6 +39,8 @@
         {% else %}
             <p>No reviews yet.</p>
         {% endif %}
+<a href="{{ url_for('all_reviews') }}">View All Reviews</a>
+
 
     </div>
 

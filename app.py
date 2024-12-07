@@ -341,16 +341,38 @@ def like_song():
 
     return redirect(f"/song/{song_id}")
 
-@app.route("/liked_songs")
+@app.route("/all_liked")
 @login_required
-def liked_songs():
+def all_liked():
     """Display a list of songs liked by the user."""
     # Query the database to fetch the liked songs of the logged-in user
     liked_songs = db.execute(
-        "SELECT songs.title, songs.artist FROM songs "
-        "JOIN likes ON songs.id = likes.song_id WHERE likes.user_id = ?",
-        session["user_id"]
+        """
+        SELECT songs.title AS name, songs.artist
+        FROM songs
+        JOIN likes ON songs.id = likes.song_id
+        WHERE likes.user_id = ?
+        ORDER BY likes.timestamp DESC
+        """,
+        (session["user_id"],)
     )
+    return render_template("liked_songs.html", songs=liked_songs)
+
+@app.route("/all_reviews")
+@login_required
+def all_reviews():
+    """Display a list of songs liked by the user."""
+    # Query the database to fetch the liked songs of the logged-in user
+    reviews = db.execute(
+        """
+        SELECT reviews.rating, reviews.timestamp, reviews.review,
+            songs.title AS song_title, songs.artist AS song_artist
+        FROM reviews
+        JOIN songs ON reviews.song_id = songs.id
+        WHERE reviews.user_id = ?
+        ORDER BY reviews.timestamp DESC
+        """,
+        (session["user_id"],))
     return render_template("liked_songs.html", songs=liked_songs)
 
 
