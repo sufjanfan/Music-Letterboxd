@@ -182,17 +182,17 @@ def search():
     if request.method == "POST":
         query = request.form.get("query")
         if not query:
-            return apology("must provide a search term")
+            return apology("must provide search query")
 
-        # Query the database for songs matching the search
-        songs = db.execute(
-            "SELECT id, title, artist FROM songs WHERE title LIKE ? OR artist LIKE ?",
-            f"%{query}%", f"%{query}%"
-        )
+        response = requests.get(f"https://musicbrainz.org/ws/2/recording/?query={query}&fmt=json")
+        if response.status_code != 200:
+            return apology("MusicBrainz API error")
 
+        songs = response.json().get("recordings", [])
         return render_template("search.html", songs=songs)
 
     return render_template("search.html")
+
 
 
 @app.route("/song/<song_id>")
