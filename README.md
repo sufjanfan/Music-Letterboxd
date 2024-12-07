@@ -2,7 +2,7 @@ Documentation for your project in the form of a Markdown file called README.md. 
 
 Welcome to Musicboxd!
 
-This website allows users to create an account that serves as their "music box", storing their ratings and reviews of any songs they log.
+This website allows users to create an account that serves as their "music box", storing their ratings and reviews of any songs they log. The website can be launched by typing "flask run" into the terminal (once in the correct directory for the project) and following the link generated.
 
 Upon accessing the website, the user will see a screen welcoming them to Musicboxd, with buttons that allow them to log in or register for an account. If this is the user's first time using the website, they should press the "Register" button to create an account. When the user presses "Register", they will be prompted to input a username and a password, and then to confirm the password. If the username is already in use, the user will be notified and should choose a different username. When the user successfully creates an account, they will be brought to their profile.
 
@@ -14,4 +14,4 @@ Clicking this link brings the user to a page displaying the title of the song, a
 
 Below this introductory information, the user will see two text boxes that allow them to submit a review and a rating of the song. The user can click in the first text box to write their review--if the length of the review exceeds the size of the text box, a scroll bar will appear to allow the user to see the entirety of the review. The text box can also be resized vertically to show the entire review without a scroll bar. After typing in a review, the user can click on the text box below to input their rating. The rating must be a whole number between 1 and 5, and the user can also use the "up" and "down" arrows that appear on the right side of the text box when hovering over it to select their rating. When all of this information has been completed, the user can click the "Submit Review" button to log the song. Below this section for submitting the reviews, the user can also see reviews and ratings of the song from other users. After the review has been submitted, the page will automatically update to include the user's review (the average rating will reflect the user's rating and the "Community Reviews" section will display the user's review, which shows their username, their written review, their rating, and the time at which they submitted the review). At this point, navigating back to the "Profile" page (which can be done through the navbar at the top) will also show the new review.
 
-The navbar also includes a page for recent community reviews, which can be accessed by clicking on "Community Reviews"
+The navbar also includes a page for recent community reviews, which can be accessed by clicking on "Community Reviews" on the navbar. This page 
