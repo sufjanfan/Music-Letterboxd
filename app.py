@@ -107,7 +107,7 @@ def register():
             db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, hash_password)
         except ValueError:
             return apology("username already exists")
-        return redirect("/login")
+        return redirect("/profile")
     # go to registration page/form for GET requests
     else:
         return render_template("register.html")
