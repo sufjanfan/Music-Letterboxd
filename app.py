@@ -308,6 +308,11 @@ def add_review(song_id):
         print(f"Error: {e}")  # Debugging
         return apology("An error occurred while submitting your review", 500)
 
+@app.route("/recent", methods=["POST"])
+@login_required
+def recent():
+    return apology("An error occurred while submitting your review", 500)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
