@@ -149,14 +149,33 @@ def logout():
 @login_required
 def profile():
     if request.method == "POST":
-        query = request.form.get("query")
+        # Get song name and artist from the form
+        song_name = request.form.get("song_name")
+        artist = request.form.get("artist")
+
+        # Validate at least one field is filled
+        if not song_name and not artist:
+            return apology("must provide at least a song name or artist")
+
+        # Construct the query for the MusicBrainz API
+        query = ""
+        if song_name:
+            query += f'title:"{song_name}"'
+        if artist:
+            if query:
+                query += " AND "
+            query += f'artist:"{artist}"'
+
+        # Make the API request
         response = requests.get(f"https://musicbrainz.org/ws/2/recording/?query={query}&fmt=json")
         if response.status_code != 200:
             return apology("MusicBrainz API error")
 
+        # Get the list of songs
         songs = response.json().get("recordings", [])
         return render_template("profile.html", songs=songs)
 
+    # For GET requests, show user reviews
     reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
     return render_template("profile.html", reviews=reviews)
 
@@ -180,14 +199,29 @@ def review():
 @app.route("/search", methods=["GET", "POST"])
 def search():
     if request.method == "POST":
-        query = request.form.get("query")
-        if not query:
-            return apology("must provide search query")
+        # Get song name and artist from the form
+        song_name = request.form.get("song_name")
+        artist = request.form.get("artist")
 
+        # Validate at least one field is filled
+        if not song_name and not artist:
+            return apology("must provide at least a song name or artist")
+
+        # Construct the query for the MusicBrainz API
+        query = ""
+        if song_name:
+            query += f'title:"{song_name}"'
+        if artist:
+            if query:
+                query += " AND "
+            query += f'artist:"{artist}"'
+
+        # Make the API request
         response = requests.get(f"https://musicbrainz.org/ws/2/recording/?query={query}&fmt=json")
         if response.status_code != 200:
             return apology("MusicBrainz API error")
 
+        # Get the list of songs
         songs = response.json().get("recordings", [])
         return render_template("search.html", songs=songs)
 
