@@ -167,3 +167,25 @@ header {
     font-weight: 700;
     font-style: italic;
 }
+
+.stars-input {
+    display: inline-flex;
+    direction: rtl;
+}
+
+.stars-input input {
+    display: none;
+}
+
+.stars-input label {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.stars-input input:checked ~ label,
+.stars-input label:hover,
+.stars-input label:hover ~ label {
+    color: #ffca28;
+}

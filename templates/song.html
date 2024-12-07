@@ -36,10 +36,17 @@
             <h2>Submit a Review</h2>
             <form action="/song/{{ song.id }}/review" method="post">
                 <div class="mb-3">
-                    <textarea autocomplete="off" class="form-control mx-auto w-auto" name="review" placeholder="Your review" rows="4"></textarea>
+                    <label for="rating">Rating:</label>
+                    <div class="stars-input">
+                        {% for star in range(5, 0, -1) %}
+                            <input type="radio" id="star{{ star }}" name="rating" value="{{ star }}" required>
+                            <label for="star{{ star }}">★</label>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="mb-3">
-                    <input autocomplete="off" class="form-control mx-auto w-auto" min="1" max="5" name="rating" placeholder="-" type="number" required>
+                    <textarea autocomplete="off" class="form-control mx-auto w-auto" name="review" placeholder="Your review" rows="4"></textarea>                    
+                </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Submit Review</button>
             </form>
@@ -71,4 +78,5 @@
             {% endif %}
         {% endif %}
     </div>
+
 {% endblock %}

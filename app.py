@@ -375,18 +375,77 @@ def all_reviews():
     # Query the database to fetch the liked songs of the logged-in user
     reviews = db.execute(
         """
-        SELECT reviews.rating, reviews.timestamp, reviews.review,
+        SELECT reviews.id, reviews.rating, reviews.timestamp, reviews.review,
             songs.title AS song_title, songs.artist AS song_artist
         FROM reviews
         JOIN songs ON reviews.song_id = songs.id
         WHERE reviews.user_id = ?
         ORDER BY reviews.timestamp DESC
         """,
-        (session["user_id"],))
+        (session["user_id"],)
+    )
     return render_template("all_reviews.html", reviews=reviews)
 
 
 
+@app.route("/delete_review/<int:review_id>", methods=["POST"])
+@login_required
+def delete_review(review_id):
+    try:
+        # Ensure the review belongs to the logged-in user
+        review = db.execute("SELECT * FROM reviews WHERE id = ? AND user_id = ?", review_id, session["user_id"])
+        if not review:
+            return apology("Review not found or not yours to delete", 403)
+
+        # Delete the review
+        db.execute("DELETE FROM reviews WHERE id = ?", review_id)
+
+        # Redirect to the reviews page
+        return redirect("/all_reviews")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return apology("An error occurred while deleting the review.")
+
+@app.route("/edit_review/<int:review_id>", methods=["GET", "POST"])
+@login_required
+def edit_review(review_id):
+    try:
+        # Ensure the review belongs to the logged-in user
+        review = db.execute("SELECT * FROM reviews WHERE id = ? AND user_id = ?", review_id, session["user_id"])
+        if not review:
+            return apology("Review not found or not yours to edit", 403)
+        
+        # For GET request, display the review in a form
+        if request.method == "GET":
+            return render_template("edit_review.html", review=review[0])
+
+        # For POST request, update the review in the database
+        new_review = request.form.get("review")
+        new_rating = request.form.get("rating")
+
+        # Validate input
+        if not new_review or not new_rating:
+            error_message = "All fields are required."
+            return render_template("edit_review.html", review=review[0], error_message=error_message)
+
+        if not new_rating.isdigit() or not (1 <= int(new_rating) <= 5):
+            error_message = "Rating must be a number between 1 and 5."
+            return render_template("edit_review.html", review=review[0], error_message=error_message)
+
+        # Update the review
+        db.execute(
+            "UPDATE reviews SET review = ?, rating = ?, timestamp = CURRENT_TIMESTAMP WHERE id = ?",
+            new_review, int(new_rating), review_id
+        )
+
+        return redirect("/all_reviews")
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return apology("An error occurred while editing the review.")
+
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
