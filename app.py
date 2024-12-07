@@ -221,21 +221,12 @@ def song_details(song_id):
                 (session["user_id"], song_id)
             ).fetchone()
 
-            if existing_review:
-                error_message = "You have already reviewed this song."
-                conn.close()
-                return render_template("song.html", error_message=error_message, song=song, reviews=reviews)
-
-            # Insert review into the database
-            conn = get_db_connection()
             # Insert review into the database
             conn = get_db_connection()
             conn.execute(
                 "INSERT INTO reviews (review, rating, user_id, song_id, song_title, song_artist, timestamp) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)",
                 (review_text, int(rating), session["user_id"], song_id, song["name"], ", ".join([artist["name"] for artist in song["artists"]]))
             )
-            conn.commit()
-            conn.close()
             conn.commit()
             conn.close()
 
