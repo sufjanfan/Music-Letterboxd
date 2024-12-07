@@ -1,0 +1,20 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "app.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "app.py"
+      }
+    ],
+    "env": {
+      "SPOTIPY_CLIENT_ID": "88374e1393b6458790e3cf67005fc5a8",
+      "SPOTIPY_CLIENT_SECRET": "570bec319d274b14a3048a93ad58bb16",
+      "SPOTIPY_REDIRECT_URI": "https://cs-50-final-project-ifylzm13j-harry-dings-projects-cd998951.vercel.app/"
+    }
+  }
