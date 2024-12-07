@@ -5,6 +5,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
+import sqlite3
+
+def get_db_connection():
+    conn = sqlite3.connect('songs.db')  # Replace with your database path
+    conn.row_factory = sqlite3.Row  # Allows access to columns by name
+    return conn
+
 
 # Configure Flask app
 app = Flask(__name__)
