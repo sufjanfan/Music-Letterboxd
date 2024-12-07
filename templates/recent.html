@@ -10,34 +10,12 @@
         <br>
 
         <!-- User Reviews -->
-
         {% if reviews %}
-            <table class="table table-striped mt-4">
-                <thead class="table-light">
-                    <tr>
-                        <th scope="col">User</th>
-                        <th scope="col">Song</th>
-                        <th scope="col">Artist</th>
-                        <th scope="col">Review</th>
-                        <th scope="col">Rating</th>
-                        <th scope="col">Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for review in reviews %}
-                    <tr>
-                        <th scope="row">{{ review.username }}</th>
-                        <td>{{ review.song_title }}</td>
-                        <td>{{ review.song_artist }}</td>
-                        <td>{{ review.review }}</td>
-                        <td>{{ review.rating }} / 5</td>
-                        <td>{{ review.timestamp }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p class="text-muted">No reviews yet.</p>
-        {% endif %}
-    </div>
-{% endblock %}
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for review in reviews %}
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ review.song_title }} by {{ review.song_artist }}</h5>
+                                <p class="card-text"><strong>User:</strong> {{ review.username }}</p>
+                 
