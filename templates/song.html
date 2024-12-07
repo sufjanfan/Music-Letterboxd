@@ -5,34 +5,42 @@
 {% endblock %}
 
 {% block main %}
-<div class="search-container">
-    <h1 class="syne">{{ song['title'] }}</h1>
-</div>
-<h2>Artist: {{ artist_name }}</h2>
-<p>Average Rating: {{ average_rating or 'No ratings yet' }}</p>
-<br>
-
-<h2>Reviews</h2>
-<ul>
-{% for review in reviews %}
-    <li>{{ review['username'] }}: {{ review['review'] }} (Rating: {{ review['rating'] }})</li>
-{% endfor %}
-</ul>
-<br>
-
-<h2>Submit a Review</h2>
-<form method="post" action="/song/{{ song['id'] }}/review">
-    <textarea name="review" placeholder="Your review"></textarea>
-    <input type="number" name="rating" min="1" max="5">
-    <button type="submit">Submit</button>
-</form>
-
-<br>
-{% if error_message %}
-    <div class="alert alert-danger" role="alert">
-        {{ error_message }}
+    <div class="search-container">
+        <h1 class="syne">{{ song['title'] }}</h1>
     </div>
-{% endif %}
+    <h2>Artist: {{ artist_name }}</h2>
+    <p>Average Rating: {{ average_rating or 'No ratings yet' }}</p>
+    <br>
 
+    <h2>Reviews</h2>
+        <ul>
+        {% for review in reviews %}
+            <li>{{ review['username'] }}: {{ review['review'] }} (Rating: {{ review['rating'] }})</li>
+        {% endfor %}
+        </ul>
+    <br>
+
+    <h2>Submit a Review</h2>
+    <form action="/search" method="post">
+        <div class="mb-3">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="song_name" placeholder="Song Name" type="text">
+        </div>
+        <div class="mb-3">
+            <input autocomplete="off" class="form-control mx-auto w-auto" name="artist" placeholder="Artist" type="text">
+        </div>
+        <button class="btn btn-primary" type="submit">Search</button>
+    </form>
+        <form method="post" action="/song/{{ song['id'] }}/review">
+            <textarea name="review" placeholder="Your review"></textarea>
+            <input type="number" name="rating" min="1" max="5">
+            <button type="submit">Submit</button>
+        </form>
+
+    <br>
+    {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
+    {% endif %}
 
 {% endblock %}
