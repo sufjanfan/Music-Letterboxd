@@ -105,6 +105,15 @@ def register():
         try:
             hash_password = generate_password_hash(password)
             db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, hash_password)
+
+            # Get the user id from the database (after the insert)
+            user = db.execute("SELECT * FROM users WHERE username = ?", username)
+            if len(user) != 1:
+                return apology("something went wrong during registration")
+
+            # Store user_id in session to log them in
+            session["user_id"] = user[0]["id"]
+
         except ValueError:
             return apology("username already exists")
         return redirect("/profile")
