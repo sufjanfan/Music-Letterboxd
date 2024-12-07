@@ -261,12 +261,10 @@ def add_review(song_id):
         return apology("must fill all fields")
 
     db.execute(
-        "INSERT INTO reviews (user_id, song_id, title, review, rating) VALUES (?, ?, ?, ?, ?)",
-        session["user_id"], song_id, title, review_text, rating
+        "INSERT INTO reviews (user_id, song_id, review, rating) VALUES (?, ?, ?, ?)",
+        session["user_id"], song_id, review_text, rating
     )
     return redirect(f"/song/{song_id}")
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
