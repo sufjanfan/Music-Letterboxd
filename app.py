@@ -312,7 +312,7 @@ def add_review(song_id):
         print(f"Error: {e}")  # Debugging
         return apology("An error occurred while submitting your review", 500)
 
-@app.route("/recent", methods=["POST"])
+@app.route("/recent")
 @login_required
 def recent():
     reviews = db.execute("SELECT * FROM reviews")
