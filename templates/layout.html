@@ -13,9 +13,12 @@
 
         <script>
             function likeSong(songId) {
-                var heartIcon = document.getElementById('heart-icon-' + songId);
+                console.log("clicked!");  // Confirm click event is triggered
 
-                // Send AJAX request to like/unlike the song
+                // Get the heart icon element
+                var heartIcon = document.getElementById('heart-icon-' + songId);
+                console.log("heartIcon:", heartIcon);  // Ensure this is getting the correct element
+
                 fetch('/like', {
                     method: 'POST',
                     body: new URLSearchParams({
@@ -27,13 +30,17 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    // Check the response from the server and toggle the heart icon
+                    console.log("Response Data:", data);  // Log the server's response
+
+                    // Check if the song was liked or unliked
                     if (data.liked) {
-                        heartIcon.classList.remove('far', 'fa-heart');
-                        heartIcon.classList.add('fa-heart');
+                        heartIcon.classList.remove('far', 'fa-heart');  // Remove empty heart
+                        heartIcon.classList.add('fa-heart');  // Add filled heart
+                        console.log("Song liked, updated icon to filled heart.");
                     } else {
-                        heartIcon.classList.remove('fa-heart');
-                        heartIcon.classList.add('far', 'fa-heart');
+                        heartIcon.classList.remove('fa-heart');  // Remove filled heart
+                        heartIcon.classList.add('far', 'fa-heart');  // Add empty heart
+                        console.log("Song unliked, updated icon to empty heart.");
                     }
                 })
                 .catch(error => {
