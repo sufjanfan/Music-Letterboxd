@@ -16,6 +16,11 @@
             <h3>Album: {{ song['album']['name'] }}</h3>
             <h4>Average Rating: {{ average_rating or 'No ratings yet' }}</h4>
 
+            <form action="/like" method="post">
+                <input type="hidden" name="song_id" value="{{ song.id }}">
+                <button type="submit">Like</button>
+            </form>
+
             <h2>Reviews</h2>
             <ul>
                 {% for review in reviews %}
