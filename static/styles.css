@@ -11,7 +11,10 @@ h1 {
 
 h2 {
     font-size: 30px;
+    margin-top: 30px;
+    margin-bottom: 15px;
 }
+
 
 p {
     font-size: 20px;
@@ -90,6 +93,16 @@ nav .navbar-brand {
 /* Hover effect - Adds shadow when hovering over the card */
 .card:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light drop shadow on hover */
+}
+
+hr {
+    margin: 40px 0; /* Adds margin around the <hr> for clearer section separation */
+    border: 0; /* Removes default border */
+    border-top: 1px solid #ccc; /* Optional: custom border style */
+}
+
+.container {
+    padding: 20px;
 }
 
 

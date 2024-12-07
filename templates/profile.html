@@ -5,24 +5,25 @@
 {% endblock %}
 
 {% block main %}
-    <div class="profile-container">
+    <div class="container">
         <h1 class="syne">{{ name }}'s<br>music box</h1>
         <br>
+        <hr>
 
-            <!-- Liked Songs -->
-            <h2>Your Liked Songs</h2>
-            {% if songs %}
-                <ul>
-                    {% for song in songs %}
-                        <li>{{ song.name }} by {{ song.artist }}</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>You haven't liked any songs yet.</p>
-            {% endif %}
-            <a href="{{ url_for('all_liked') }}">View All Liked Songs</a>
-
-
+        <!-- Liked Songs -->
+        <h2>Your Liked Songs</h2>
+        {% if songs %}
+            <ul>
+                {% for song in songs %}
+                    <li>{{ song.name }} by {{ song.artist }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You haven't liked any songs yet.</p>
+        {% endif %}
+        <a href="{{ url_for('all_liked') }}">View All Liked Songs</a>
+        <br>
+        <hr>
 
         <!-- User Reviews -->
         <h2>Your Reviews</h2>
@@ -30,7 +31,7 @@
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 {% for review in reviews %}
                     <div class="col">
-                        <div class="card shadow-sm">
+                        <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">{{ review.song_title }} by {{ review.song_artist }}</h5>
                                 <p class="card-text"><strong>Rating:</strong> {{ review.rating }}</p>
@@ -46,11 +47,10 @@
         {% endif %}
 
         <a href="{{ url_for('all_reviews') }}">View All Reviews</a>
-
-
     </div>
 
     <br>
+
     {% if error_message %}
         <div class="alert alert-danger" role="alert">
             {{ error_message }}
