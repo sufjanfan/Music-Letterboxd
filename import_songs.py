@@ -16,7 +16,7 @@ def populate_songs():
     for song in songs:
         title = song["title"]
         artist = song["artist-credit"][0]["name"]
-        id = song["id"]  # Extract the track ID
+        track_id = song["id"]  # Extract the track ID
         try:
             # Insert into the songs table
             db.execute(
