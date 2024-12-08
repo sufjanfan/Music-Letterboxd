@@ -142,6 +142,7 @@ def profile():
     # retrieve the username
     username = user[0]["username"]
 
+    #retrieve user reviews from database
     reviews = db.execute(
         """
         SELECT reviews.id, reviews.rating, reviews.timestamp, reviews.review,
@@ -153,8 +154,7 @@ def profile():
         """, session["user_id"]
         )
 
-    # reviews = db.execute("SELECT * FROM reviews WHERE user_id = ?", session["user_id"])
-    # Fetch user's liked songs
+    # retrieve user's liked songs
     liked_songs = db.execute(
         """
         SELECT songs.id AS spotify_id, songs.title AS name, songs.artist
@@ -167,7 +167,7 @@ def profile():
         (session["user_id"],)
     )
 
-    # Pass data to the template
+    # render profile page with user, review, and liked songs data
     return render_template("profile.html", name=username, reviews=reviews, songs=liked_songs)
 
 @app.route("/search", methods=["GET", "POST"])
