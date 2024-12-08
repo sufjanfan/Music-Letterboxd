@@ -23,7 +23,7 @@
                     <td>{{ song.artist }}</td>
 
                     <td>
-
+                        <div style="width: 50%;">
                         <iframe
                             src="https://open.spotify.com/embed/track/{{ song.spotify_id }}"
                             width="100%"
@@ -32,6 +32,7 @@
                             allowtransparency="true"
                             allow="encrypted-media">
                         </iframe>
+                    </div>
                     </td>
                     <td>
                         <form action="{{ url_for('like_song') }}" method="post">
