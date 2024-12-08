@@ -13,13 +13,6 @@
         {% else %}
             <h1 class="syne">{{ song['name'] }}</h1>
 
-            <!-- Heart Icon for Liking the Song -->
-            <form id="like-form-{{ song.id }}" action="/like" method="POST" class="like-form">
-                <input type="hidden" name="song_id" value="{{ song.id }}">
-                <!-- Font Awesome Heart Icon (Empty or Filled) -->
-                <i id="heart-icon-{{ song.id }}" class="heart-icon {% if liked_status %}fas fa-heart{% else %}far fa-heart{% endif %}" data-song-id="{{ song.id }}"></i>
-            </form>
-
             <iframe
                             src="https://open.spotify.com/embed/track/{{ song.id }}"
 <<<<<<< HEAD
@@ -32,6 +25,13 @@
                             allowtransparency="true"
                             allow="encrypted-media">
             </iframe>
+
+            <!-- Heart Icon for Liking the Song -->
+            <form id="like-form-{{ song.id }}" action="/like" method="POST" class="like-form">
+                <input type="hidden" name="song_id" value="{{ song.id }}">
+                <!-- Font Awesome Heart Icon (Empty or Filled) -->
+                <i id="heart-icon-{{ song.id }}" class="heart-icon {% if liked_status %}fas fa-heart{% else %}far fa-heart{% endif %}" data-song-id="{{ song.id }}"></i>
+            </form>
 
             <br>
             <h2>Artist: {{ song['artists'][0]['name'] }}</h2>
