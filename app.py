@@ -367,7 +367,8 @@ def like_song():
 @login_required
 def like_song():
     try:
-        song_id = request.form.get("song_id")
+        data = request.get_json()
+        song_id = data.get("song_id")
 
         if not song_id:
             return jsonify({"error": "Song ID required."}), 400

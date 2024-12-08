@@ -22,6 +22,41 @@
                     </form>
                 {% endfor %}
             </ul>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const likeButtons = document.querySelectorAll(".like-btn");
+
+                    likeButtons.forEach(button => {
+                        button.addEventListener("click", function () {
+                            const songId = this.dataset.songId;
+                            fetch("/like", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({ song_id: songId }),
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.liked === false) {
+                                    // Update UI to reflect "unliked" status
+                                    this.textContent = "Like"; // Change button text
+                                    this.classList.remove("btn-danger");
+                                    this.classList.add("btn-primary");
+                                } else if (data.liked === true) {
+                                    // Update UI to reflect "liked" status
+                                    this.textContent = "Unlike"; // Change button text
+                                    this.classList.remove("btn-primary");
+                                    this.classList.add("btn-danger");
+                                }
+                            })
+                            .catch(error => {
+                                console.error("Error:", error);
+                            });
+                        });
+                    });
+                });
+            </script>
         {% else %}
             <p>You haven't liked any songs yet.</p>
         {% endif %}
