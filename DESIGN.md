@@ -1,4 +1,6 @@
-LINK TO PUBLIC GITHUB REPOSITORY: https://github.com/sufjanfan/Music-Letterboxd
+LINK TO PUBLIC GITHUB REPOSITORY (file size was too large for Gradescope): https://github.com/sufjanfan/Music-Letterboxd
+
+LINK TO VIDEO: https://youtu.be/Wk4C4LI0LYA
 
 Musicboxd is a web application that allows users to manage their music preferences by interacting with the Spotify API. It integrates functionalities such as logging in, searching for songs, reviewing them, and managing user-specific data (such as liked songs and reviews) stored in a SQLite database. The primary aim of this project is to provide a personalized experience for users while allowing them to interact with Spotify's vast music database.
 

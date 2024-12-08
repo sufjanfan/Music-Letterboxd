@@ -1,4 +1,6 @@
-LINK TO PUBLIC GITHUB REPOSITORY: https://github.com/sufjanfan/Music-Letterboxd
+LINK TO PUBLIC GITHUB REPOSITORY (file size was too large for Gradescope): https://github.com/sufjanfan/Music-Letterboxd
+
+LINK TO VIDEO: https://youtu.be/Wk4C4LI0LYA
 
 Welcome to Musicboxd!
 
