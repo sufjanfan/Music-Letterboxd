@@ -15,6 +15,7 @@
         {% if songs %}
             <ul>
                 {% for song in songs %}
+<<<<<<< HEAD
                     <li>
                         <div class="iframe-container">
                             <iframe
@@ -27,6 +28,23 @@
                             </iframe>
                         </div>
                     </li>
+=======
+                    <li> <!--{{ song.name }} by {{ song.artist }}-->
+                        <iframe
+                            src="https://open.spotify.com/embed/track/{{ song.id }}"
+                            width="50%"
+                            height="80"
+                            frameborder="0"
+                            allowtransparency="true"
+                            allow="encrypted-media">
+                        </iframe>
+
+                    <!--
+                    <form action="{{ url_for('like_song') }}" method="post" style="display:inline;">
+                        <input type="hidden" name="song_id" value="{{ song.spotify_id }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Unlike</button>
+                    </form> -->
+>>>>>>> 58bb3fa0f4cb9ba5c5c8e4011fcdaa1d733e91b8
                 {% endfor %}
             </ul>
         {% else %}
