@@ -387,8 +387,8 @@ def like_song():
             # If already liked, remove it from likes
             db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
             liked = False
-
         return jsonify({"liked": liked})
+
     except Exception as e:
         # Log the error (optional) and return a generic error response
         print(f"Error in like_song: {e}")
