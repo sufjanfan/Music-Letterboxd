@@ -2,7 +2,7 @@ from cs50 import SQL
 from flask import Flask, render_template, request, redirect, session, jsonify
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
-from helpers import apology, login_required
+from helpers import login_required
 import sqlite3
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
@@ -353,12 +353,14 @@ def like_song():
         song_id = request.form.get("song_id")
 
         if not song_id:
-            return jsonify({"error": "Song ID required."}), 400
+            error_message = "Song ID required."
+            return render_template("song.html", error_message=error_message, song_id=song_id)
 
         # makes sure song exists
         song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
         if not song:
-            return jsonify({"error": "Song not found."}), 404
+            error_message = "Song not found."
+            return render_template("song.html", error_message=error_message, song_id=song_id)
 
         # check if the song has already been liked by the user
         already_liked = db.execute(
@@ -416,7 +418,6 @@ def all_reviews():
     return render_template("all_reviews.html", reviews=reviews)
 
 
-
 @app.route("/delete_review/<int:review_id>", methods=["POST"])
 @login_required
 def delete_review(review_id):
@@ -424,7 +425,8 @@ def delete_review(review_id):
         # Ensure the review belongs to the logged-in user
         review = db.execute("SELECT * FROM reviews WHERE id = ? AND user_id = ?", review_id, session["user_id"])
         if not review:
-            return apology("Review not found or not yours to delete", 403)
+            error_message = "Review not found."
+            return render_template("song.html", error_message=error_message, song_id=song_id)
 
         # Delete the review
         db.execute("DELETE FROM reviews WHERE id = ?", review_id)
