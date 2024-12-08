@@ -194,3 +194,13 @@ header {
 .stars-input label:hover ~ label {
     color: #000000;
 }
+
+.iframe-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 10px 0;
+}
+iframe {
+    max-width: 50%; /* Ensures the iframe width is reduced by 50% */
+}
