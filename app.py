@@ -324,6 +324,7 @@ def recent():
         FROM reviews
         JOIN users ON reviews.user_id = users.id
         JOIN songs ON reviews.song_id = songs.id
+        
     """)
     return render_template("recent.html", reviews=reviews)
 
