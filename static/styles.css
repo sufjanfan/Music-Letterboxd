@@ -194,3 +194,13 @@ header {
 .stars-input label:hover ~ label {
     color: #000000;
 }
+
+.iframe-container {
+    text-align: center; /* Centers the iframe within the cell */
+}
+
+iframe {
+    width: 100%; /* Makes the iframe fill the cell width */
+    height: 80px; /* Keeps a consistent height for the iframe */
+    border: 0; /* Removes unnecessary borders */
+}
