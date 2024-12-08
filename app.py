@@ -328,7 +328,7 @@ def recent():
     """)
     return render_template("recent.html", reviews=reviews)
 
-
+'''
 @app.route("/like", methods=["POST"])
 @login_required
 def like_song():
@@ -357,8 +357,9 @@ def like_song():
 
     # Redirect back to the referring page
     return redirect(request.referrer or "/profile")
-
 '''
+
+
 @app.route("/like", methods=["POST"])
 @login_required
 def like_song():
@@ -389,7 +390,7 @@ def like_song():
 
     # Return a JSON response with the updated like status
     return jsonify({"liked": liked})
-'''
+
 
 @app.route("/all_liked")
 @login_required

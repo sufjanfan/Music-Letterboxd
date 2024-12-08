@@ -19,13 +19,7 @@
                 <!-- Font Awesome Heart Icon (Empty or Filled) -->
                 <i id="heart-icon-{{ song.id }}" class="heart-icon {% if liked_status %}fas fa-heart{% else %}far fa-heart{% endif %}" data-song-id="{{ song.id }}"></i>
             </form>
-
-            <!-- Test filled heart (should be red) -->
-            <i class="fas fa-heart" style="color:red;"></i>
-
-            <!-- Test empty heart (should be gray) -->
-            <i class="far fa-heart" style="color:gray;"></i>
-
+            
             <br>
             <h2>Artist: {{ song['artists'][0]['name'] }}</h2>
             <h3>Album: {{ song['album']['name'] }}</h3>
@@ -44,7 +38,7 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <textarea autocomplete="off" class="form-control mx-auto w-auto" name="review" placeholder="Your review" rows="4"></textarea>                    
+                    <textarea autocomplete="off" class="form-control mx-auto w-auto" name="review" placeholder="Your review" rows="4"></textarea>
                 </div>
                 </div>
                 <button class="btn btn-primary" type="submit">Submit Review</button>
