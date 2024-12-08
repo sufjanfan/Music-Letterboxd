@@ -3,9 +3,10 @@ from flask import Flask, render_template, request, redirect, session, jsonify
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import apology, login_required
+import sqlite3
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
-import sqlite3
+from spotipy.cache_handler import CacheFileHandler
 
 # Configure Flask app
 app = Flask(__name__)
@@ -18,12 +19,14 @@ Session(app)
 # Configure SQLite database
 db = SQL("sqlite:///songs.db")
 
-# Spotify API credentials
-SPOTIPY_CLIENT_ID = "88374e1393b6458790e3cf67005fc5a8"
-SPOTIPY_CLIENT_SECRET = "570bec319d274b14a3048a93ad58bb16"
+# Set up an in-memory cache to avoid using a file
+cache_handler = spotipy.cache_handler.MemoryCacheHandler()
 
-# Initialize Spotify client
-sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET))
+sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
+    client_id="88374e1393b6458790e3cf67005fc5a8",
+    client_secret="570bec319d274b14a3048a93ad58bb16",
+    cache_handler=cache_handler  # This will disable file caching by using memory cache
+))
 
 def get_db_connection():
     conn = sqlite3.connect('songs.db')  # Replace with your database path
