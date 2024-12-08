@@ -261,7 +261,11 @@ def song_details(song_id):
             # Re-fetch the reviews after insertion
             conn = get_db_connection()
             reviews = conn.execute(
-                "SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ? ORDER BY likes.timestamp DESC",
+                """SELECT reviews.*, users.username FROM reviews
+                JOIN users ON reviews.user_id = users.id
+                WHERE song_id = ?
+                JOIN likes ON songs.id = likes.song_id
+                ORDER BY likes.timestamp DESC""",
                 (song_id,)
             ).fetchall()
             conn.close()
@@ -324,6 +328,7 @@ def recent():
         FROM reviews
         JOIN users ON reviews.user_id = users.id
         JOIN songs ON reviews.song_id = songs.id
+        JOIN likes ON songs.id = likes.song_id
         ORDER BY likes.timestamp DESC
     """)
     return render_template("recent.html", reviews=reviews)
