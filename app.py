@@ -170,36 +170,38 @@ def profile():
     # render profile page with user, review, and liked songs data
     return render_template("profile.html", name=username, reviews=reviews, songs=liked_songs)
 
+# search for songs
 @app.route("/search", methods=["GET", "POST"])
 def search():
+    # retrieve desired song name and artist from the form
     if request.method == "POST":
-        # Get song name and artist from the form
         song_name = request.form.get("song_name")
         artist = request.form.get("artist")
 
-        # Validate at least one field is filled
+        # confirm that at least one field is filled
         if not song_name and not artist:
             error_message = "Must provide at least a song name or artist."
             return render_template("search.html", error_message=error_message)
 
-        # Construct query for Spotify search
+        # create query for Spotify search
         query = f"track:{song_name}" if song_name else ""
         if artist:
             query += f" artist:{artist}"
 
-        # Make the API request to Spotify
+        # use Spotify API to search for songs
         results = sp.search(q=query, type="track", limit=10)  # Limit to 10 results
 
+        # check if results were found
         if results['tracks']['items']:
             songs = results['tracks']['items']
 
-            # Insert each song into the database
+            # insert song details into the database
             for song in songs:
                 song_id = song['id']
                 song_title = song['name']
                 song_artist = ", ".join([artist['name'] for artist in song['artists']])
 
-                # Use INSERT OR IGNORE to avoid duplicate entries
+                # use INSERT or IGNORE to prevent duplicates
                 db.execute(
                     "INSERT OR IGNORE INTO songs (id, title, artist) VALUES (?, ?, ?)",
                     song_id, song_title, song_artist
@@ -210,21 +212,22 @@ def search():
 
         return render_template("search.html", songs=songs)
 
-    # For GET requests, just render the empty search page
+    # for GET requests, render the empty search page
     return render_template("search.html")
 
+# song details route
 @app.route("/song/<song_id>", methods=["GET", "POST"])
 def song_details(song_id):
     try:
-        # Fetch song details from Spotify API using song_id
+        # retrieve song details from Spotify API using song_id
         song = sp.track(song_id)
 
-        # Check if the song data is returned as expected
+        # check if song exists
         if not song:
             error_message = "Song not found."
             return render_template("song.html", error_message=error_message)
 
-        # Check if the song is liked by the user
+        # cehck if the song was already liked by the user
         liked_song = db.execute(
             "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
             session["user_id"], song_id
@@ -232,7 +235,7 @@ def song_details(song_id):
 
         liked_status = True if liked_song else False
 
-        # Fetch reviews from your database
+        # fetch reviews
         conn = get_db_connection()
         reviews = conn.execute(
             "SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?",
@@ -240,7 +243,7 @@ def song_details(song_id):
         ).fetchall()
         conn.close()
 
-        # Handle review submission if it's a POST request
+        # add review if it's a POST request
         if request.method == "POST":
             review_text = request.form.get("review")
             rating = request.form.get("rating")
@@ -253,27 +256,23 @@ def song_details(song_id):
                 error_message = "Rating must be a number between 1 and 5."
                 return render_template("song.html", error_message=error_message, song=song, reviews=reviews)
 
-            # Check if the user has already reviewed this song
+            # see if the user has already reviewed this song
             conn = get_db_connection()
             existing_review = conn.execute(
                 "SELECT * FROM reviews WHERE user_id = ? AND song_id = ?",
                 (session["user_id"], song_id)
             ).fetchone()
 
-            # Insert review into the database
+            # insert review into the database
             conn = get_db_connection()
-
-
             conn.execute(
                     "INSERT INTO reviews (review, rating, user_id, song_id, timestamp) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)",
                     (review_text, int(rating), session["user_id"], song_id)
                 )
-
-
             conn.commit()
             conn.close()
 
-            # Re-fetch the reviews after insertion
+            # re-fetch the reviews after insertion
             conn = get_db_connection()
             reviews = conn.execute(
                 """SELECT reviews.*, users.username FROM reviews
@@ -284,15 +283,15 @@ def song_details(song_id):
             ).fetchall()
             conn.close()
 
-        # Calculate average rating
+        # calculate average rating of song
         ratings = [review["rating"] for review in reviews]
         average_rating = round(sum(ratings) / len(ratings), 2) if ratings else None
 
-        # Render the song page with the retrieved song and reviews
+        # render the song page with the retrieved song and reviews
         return render_template("song.html", song=song, reviews=reviews, average_rating=average_rating, liked_status=liked_status)
 
     except Exception as e:
-        print(f"Error: {e}")  # Debugging
+        print(f"Error: {e}")  # debugging
         error_message = "An unexpected error occurred while fetching song details."
         return render_template("song.html", error_message=error_message)
 
