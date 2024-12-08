@@ -74,7 +74,6 @@ def login():
 @app.route("/register", methods=["GET", "POST"])
 def register():
 # register user
-
     # retrieves user inputs using post method
     if request.method == "POST":
         username = request.form.get("username")
