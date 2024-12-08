@@ -5,25 +5,29 @@
     margin-top: 60px;
 }
 
+/* main heading styling */
 h1 {
     font-size: 90px;
 }
 
+/* secondary heading styling */
 h2 {
     font-size: 30px;
     margin-top: 30px;
     margin-bottom: 15px;
 }
 
-
+/* paragraph text styling */
 p {
     font-size: 20px;
 }
 
+/* bulleted list styling */
 ul {
     list-style-type: none;
 }
 
+/* navbar styling */
 nav {
     position: sticky;
     top: 0;
@@ -40,6 +44,7 @@ nav .navbar-brand {
     font-family: "Space Mono";
 }
 
+/* button styling */
 .btn {
     display: inline-block;
     padding: 10px 20px;
@@ -58,15 +63,15 @@ nav .navbar-brand {
     color: white;
 }
 
-/* Card styling */
+/* card styling */
 .card {
-    border: 1px solid #ddd; /* Light border for card */
-    border-radius: 8px; /* Rounded corners */
-    background-color: #f9f9f9; /* Light background */
-    transition: box-shadow 0.3s ease-in-out; /* Smooth transition for shadow */
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: box-shadow 0.3s ease-in-out;
 }
 
-/* Card body style */
+/* card styling */
 .card-body {
     padding: 20px;
 }
@@ -84,28 +89,26 @@ nav .navbar-brand {
 
 .card-text small {
     font-size: 0.85rem;
-    color: #6c757d; /* Muted text color */
+    color: #6c757d;
 }
 
 .card-body p {
     margin-bottom: 10px;
 }
 
-/* Hover effect - Adds shadow when hovering over the card */
 .card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Light drop shadow on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 hr {
-    margin: 40px 0; /* Adds margin around the <hr> for clearer section separation */
-    border: 0; /* Removes default border */
-    border-top: 1px solid #ccc; /* Optional: custom border style */
+    margin: 40px 0;
+    border: 0;
+    border-top: 1px solid #ccc;
 }
 
 .container {
     padding: 20px;
 }
-
 
 body {
     background-color: #ffffff;
@@ -114,7 +117,7 @@ body {
 }
 
 header {
-    overflow: visible;  /* Ensure header doesn't clip its content */
+    overflow: visible;  /* ensure header doesn't clip its content */
 }
 
 /* Heart icon styling */
@@ -174,6 +177,7 @@ header {
     font-style: italic;
 }
 
+/* Star rating styling */
 .stars-input {
     display: inline-flex;
     direction: rtl;

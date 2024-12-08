@@ -1,3 +1,5 @@
+# taken from finance p-set
+
 import requests
 
 from flask import redirect, render_template, session

@@ -422,27 +422,28 @@ def all_reviews():
 @login_required
 def delete_review(review_id):
     try:
-        # Ensure the review belongs to the logged-in user
+        # makes sure the review belongs to the user
         review = db.execute("SELECT * FROM reviews WHERE id = ? AND user_id = ?", review_id, session["user_id"])
         if not review:
             error_message = "Review not found."
             return render_template("song.html", error_message=error_message, song_id=song_id)
 
-        # Delete the review
+        # delete the review
         db.execute("DELETE FROM reviews WHERE id = ?", review_id)
 
-        # Redirect to the reviews page
+        # redirect to the profile page
         return redirect("/profile")
 
     except Exception:
         error_message = "An error occurred while deleting your review."
         return render_template("profile.html", error_message=error_message, song_id=song_id)
 
+# edit a review
 @app.route("/edit_review/<int:review_id>", methods=["GET", "POST"])
 @login_required
 def edit_review(review_id):
     try:
-        # Fetch the review along with the associated song's title and artist
+        # retrieve the review along with the associated song's title and artist
         review = db.execute("""
             SELECT reviews.*, songs.title AS song_title, songs.artist AS song_artist
             FROM reviews
@@ -454,15 +455,15 @@ def edit_review(review_id):
             error_message = "An error occurred while editing your review."
             return render_template("song.html", error_message=error_message, song_id=song_id)
 
-        # For GET request, display the review in a form
+        # for GET request, display the review in a form
         if request.method == "GET":
             return render_template("edit_review.html", review=review[0])
 
-        # For POST request, update the review in the database
+        # for POST request, update the review in the database
         new_review = request.form.get("review")
         new_rating = request.form.get("rating")
 
-        # Validate input
+        # validate input
         if not new_review or not new_rating:
             error_message = "All fields are required."
             return render_template("edit_review.html", review=review[0], error_message=error_message)
@@ -471,7 +472,7 @@ def edit_review(review_id):
             error_message = "Rating must be a number between 1 and 5."
             return render_template("edit_review.html", review=review[0], error_message=error_message)
 
-        # Update the review
+        # update the review
         db.execute(
             "UPDATE reviews SET review = ?, rating = ?, timestamp = CURRENT_TIMESTAMP WHERE id = ?",
             new_review, int(new_rating), review_id
