@@ -21,6 +21,12 @@
                         <input type="hidden" name="song_id" value="{{ song.spotify_id }}">
                         <button type="submit" class="btn btn-danger btn-sm">Unlike</button>
                     </form> -->
+                    <!-- Heart Icon for Liking the Song -->
+                    <form id="like-form-{{ song.id }}" action="/like" method="POST" class="like-form">
+                        <input type="hidden" name="song_id" value="{{ song.id }}">
+                        <!-- Font Awesome Heart Icon (Empty or Filled) -->
+                        <i id="heart-icon-{{ song.id }}" class="heart-icon {% if liked_status %}fas fa-heart{% else %}far fa-heart{% endif %}" data-song-id="{{ song.id }}"></i>
+                    </form>
                 {% endfor %}
             </ul>
         {% else %}
