@@ -6,12 +6,13 @@
 
 {% block main %}
     <div class="container">
-        <!-- -->
+        <!-- displays error message if error occurs in /song route -->
         {% if error_message %}
             <div class="alert alert-danger" role="alert">
                 {{ error_message }}
             </div>
         {% else %}
+        <!-- display song details and spotify embed for song -->
             <h1 class="syne">{{ song['name'] }}</h1>
             <iframe
                             src="https://open.spotify.com/embed/track/{{ song.id }}"
@@ -24,19 +25,21 @@
             <br>
             <br>
 
-            <!-- Heart Icon for Liking the Song -->
+            <!-- shows heart icon to like song -->
             <form id="like-form-{{ song.id }}" action="/like" method="POST" class="like-form">
                 <input type="hidden" name="song_id" value="{{ song.id }}">
-                <!-- Font Awesome Heart Icon (Empty or Filled) -->
+                <!-- change icon based on like status -->
                 <i id="heart-icon-{{ song.id }}" class="heart-icon {% if liked_status %}fas fa-heart{% else %}far fa-heart{% endif %}" data-song-id="{{ song.id }}"></i>
             </form>
 
             <br>
+            <!-- show artist, album details -->
             <h2>Artist: {{ song['artists'][0]['name'] }}</h2>
             <h3>Album: {{ song['album']['name'] }}</h3>
             <br>
             <h4>Average Rating: {{ average_rating or 'No ratings yet' }}</h4>
             <br>
+            <!-- submit rating via star icons and review via textbox-->
             <h2>Submit a Review</h2>
             <form action="/song/{{ song.id }}/review" method="post">
                 <div class="mb-3">
