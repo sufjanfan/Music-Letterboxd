@@ -7,12 +7,6 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import sqlite3
 
-def get_db_connection():
-    conn = sqlite3.connect('songs.db')  # Replace with your database path
-    conn.row_factory = sqlite3.Row  # Allows access to columns by name
-    return conn
-
-
 # Configure Flask app
 app = Flask(__name__)
 
@@ -30,6 +24,11 @@ SPOTIPY_CLIENT_SECRET = "570bec319d274b14a3048a93ad58bb16"
 
 # Initialize Spotify client
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET))
+
+def get_db_connection():
+    conn = sqlite3.connect('songs.db')  # Replace with your database path
+    conn.row_factory = sqlite3.Row  # Allows access to columns by name
+    return conn
 
 # Homepage
 @app.route("/")
