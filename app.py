@@ -327,7 +327,7 @@ def add_review(song_id):
         return redirect(f"/song/{song_id}")
 
     except Exception as e:
-        print(f"Error: {e}")  # Debugging
+        print(f"Error: {e}")  # debugging
         error_message = "An error occurred while submitting your review."
         return render_template("song.html", error_message=error_message, song_id=song_id)
 
@@ -335,6 +335,7 @@ def add_review(song_id):
 @app.route("/recent")
 @login_required
 def recent():
+    #retrieves username, rating, timestamp, content, title & artist of song
     reviews = db.execute("""
         SELECT users.username, reviews.rating, reviews.timestamp, reviews.review,
                songs.title AS song_title, songs.artist AS song_artist
@@ -343,39 +344,8 @@ def recent():
         JOIN songs ON reviews.song_id = songs.id
         ORDER BY reviews.timestamp DESC
     """)
+    # renders recent reviews template with all reviews ordered by recency
     return render_template("recent.html", reviews=reviews)
-
-'''
-@app.route("/like", methods=["POST"])
-@login_required
-def like_song():
-    song_id = request.form.get("song_id")
-
-    if not song_id:
-        return jsonify({"error": "Song ID required."}), 400
-
-    # Check if the song exists
-    song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
-    if not song:
-        return jsonify({"error": "Song not found."}), 404
-
-    # Check if the song is already liked by the user
-    already_liked = db.execute(
-        "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
-        session["user_id"], song_id
-    )
-
-    if len(already_liked) == 0:
-        # If not liked yet, add the song to likes
-        db.execute("INSERT INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
-    else:
-        # If already liked, remove it from likes (unlike)
-        db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
-
-    # Redirect back to the referring page
-    return redirect(request.referrer or "/profile")
-'''
-
 
 @app.route("/like", methods=["POST"])
 @login_required
@@ -386,38 +356,35 @@ def like_song():
         if not song_id:
             return jsonify({"error": "Song ID required."}), 400
 
-        # Check if the song exists
+        # makes sure song exists
         song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
         if not song:
             return jsonify({"error": "Song not found."}), 404
 
-        # Check if the song is already liked by the user
+        # check if the song has already been liked by the user
         already_liked = db.execute(
             "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
             session["user_id"], song_id
         )
 
         if len(already_liked) == 0:
-            # If not liked yet, add the song to likes
+            # if not liked yet, add the song to likes
             db.execute("INSERT INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
             liked = True
         else:
-            # If already liked, remove it from likes
+            # if already liked, remove it from likes
             db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
             liked = False
         return jsonify({"liked": liked})
 
-    except Exception as e:
-        # Log the error (optional) and return a generic error response
-        print(f"Error in like_song: {e}")
-        return jsonify({"error": "An error occurred while processing your request."}), 500
-
-
+    except Exception:
+        error_message = "Error in liked song."
+        return render_template("song.html", error_message=error_message, song_id=song_id)
 
 @app.route("/all_liked")
 @login_required
 def all_liked():
-    """Display a list of songs liked by the user."""
+    # display list of all of the user's liked songs in order of recency
     liked_songs = db.execute(
         """
         SELECT songs.id AS spotify_id, songs.title AS name, songs.artist
@@ -434,8 +401,7 @@ def all_liked():
 @app.route("/all_reviews")
 @login_required
 def all_reviews():
-    """Display a list of songs liked by the user."""
-    # Query the database to fetch the liked songs of the logged-in user
+    # retrieve user's reviews (joining reviews and songs table)
     reviews = db.execute(
         """
         SELECT reviews.id, reviews.rating, reviews.timestamp, reviews.review,
@@ -447,6 +413,7 @@ def all_reviews():
         """,
         (session["user_id"],)
     )
+    # renders all_reviews.html with reviews data
     return render_template("all_reviews.html", reviews=reviews)
 
 
@@ -464,11 +431,11 @@ def delete_review(review_id):
         db.execute("DELETE FROM reviews WHERE id = ?", review_id)
 
         # Redirect to the reviews page
-        return redirect("/all_reviews")
+        return redirect("/profile")
 
-    except Exception as e:
-        print(f"Error: {e}")
-        return apology("An error occurred while deleting the review.")
+    except Exception:
+        error_message = "An error occurred while deleting your review."
+        return render_template("profile.html", error_message=error_message, song_id=song_id)
 
 @app.route("/edit_review/<int:review_id>", methods=["GET", "POST"])
 @login_required
@@ -483,7 +450,8 @@ def edit_review(review_id):
         """, review_id, session["user_id"])
 
         if not review:
-            return apology("Review not found or not yours to edit", 403)
+            error_message = "An error occurred while editing your review."
+            return render_template("song.html", error_message=error_message, song_id=song_id)
 
         # For GET request, display the review in a form
         if request.method == "GET":
@@ -508,11 +476,11 @@ def edit_review(review_id):
             new_review, int(new_rating), review_id
         )
 
-        return redirect("/all_reviews")
+        return redirect("/profile")
 
-    except Exception as e:
-        print(f"Error: {e}")
-        return apology("An error occurred while editing the review.")
+    except Exception:
+        error_message = "An error occurred while editing your review."
+        return render_template("profile.html", error_message=error_message)
 
 
 if __name__ == "__main__":
