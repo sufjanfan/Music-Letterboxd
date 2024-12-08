@@ -13,6 +13,15 @@
         {% else %}
             <h1 class="syne">{{ song['name'] }}</h1>
 
+            <iframe
+                            src="https://open.spotify.com/embed/track/{{ song.spotify_id }}"
+                            width="100%"
+                            height="80"
+                            frameborder="0"
+                            allowtransparency="true"
+                            allow="encrypted-media">
+            </iframe>
+
             <!-- Heart Icon for Liking the Song -->
             <form id="like-form-{{ song.id }}" action="/like" method="POST" class="like-form">
                 <input type="hidden" name="song_id" value="{{ song.id }}">
