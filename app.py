@@ -300,10 +300,10 @@ def song_details(song_id):
 @login_required
 def add_review(song_id):
     try:
-        # Retrieve song details from Spotify API
+        # retrieve song details from Spotify API
         song = sp.track(song_id)
 
-        # Retrieve and validate form data
+        # retrieve and validate form data
         review_text = request.form.get("review")
         rating = request.form.get("rating")
 
@@ -315,7 +315,7 @@ def add_review(song_id):
             error_message = "Rating must be a number between 1 and 5."
             return render_template("song.html", error_message=error_message, song_id=song_id)
 
-        # Insert review into the database, including the song title and artist
+        # put review into the database associated with song and user id
         conn = get_db_connection()
         conn.execute(
             "INSERT INTO reviews (review, rating, user_id, song_id, timestamp) VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP)",

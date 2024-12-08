@@ -2,10 +2,11 @@
 
 {% block main %}
 <div class="container">
-    <h1>Edit Your Review</h1>
+    <h1 class="syne">edit your review</h1>
+    <br>
     <!-- Display the song title and artist -->
     <h2>{{ review.song_title }} by {{ review.song_artist }}</h2>
-    
+
     <form action="{{ url_for('edit_review', review_id=review.id) }}" method="POST">
         <div class="mb-3">
             <label for="rating">Rating:</label>
