@@ -58,9 +58,10 @@
             </form>
             <br>
 
+            <!-- display community reviews-->
             <h2>Community Reviews</h2>
 
-            <!-- User Reviews -->
+            <!-- if there are reviews to display, put in cards -->
             {% if reviews %}
                 <div class="row row-cols-1 row-cols-md-3 g-4">
                     {% for review in reviews %}
@@ -77,6 +78,7 @@
                     {% endfor %}
                 </div>
             {% else %}
+            <!-- placeholder text if no reviews exist -->
                 <p class="text-muted">No reviews yet.</p>
             {% endif %}
         {% endif %}

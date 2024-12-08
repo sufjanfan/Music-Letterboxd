@@ -5,10 +5,12 @@
 {% endblock %}
 
 {% block main %}
+    <!-- header text -->
     <div class="container">
         <h1 class="syne">find<br>a song</h1>
         <br>
     </div>
+    <!-- form to search songs -->
     <form action="/search" method="post">
         <div class="mb-3">
             <input autocomplete="off" class="form-control mx-auto w-auto" name="song_name" placeholder="Song Name" type="text">
@@ -20,6 +22,7 @@
     </form>
 
     <br>
+    <!-- if there are songs, create table listing song name, artist, and actions that match the query -->
     {% if songs %}
         <table class="table table-bordered table-striped">
             <thead>
@@ -29,6 +32,7 @@
                     <th>Actions</th>
                 </tr>
             </thead>
+            <!-- loop through every song to make sure all of them and their details are displayed -->
             <tbody>
                 {% for song in songs %}
                     <tr>
@@ -43,7 +47,7 @@
             </tbody>
         </table>
     {% endif %}
-
+        <!-- if something went wrong in the backend, display error -->
     <br>
     {% if error_message %}
         <div class="alert alert-danger" role="alert">
