@@ -8,7 +8,7 @@
     <div class="intro-container">
         <h1 class="syne">welcome<br>back!</h1>
     </div>
-
+    <!-- login form -->
     <form action="/login" method="post">
         <div class="mb-3">
             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text">
@@ -21,6 +21,7 @@
 
 
     <br>
+    <!-- display error message if something goes wrong -->
     {% if error_message %}
     <div class="alert alert-danger" role="alert">
         {{ error_message }}

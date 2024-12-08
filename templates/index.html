@@ -6,6 +6,7 @@
 
 {% block main %}
     <div class="intro-container">
+        <!-- header -->
         <br>
         <h1 class="space-mono-regular" style="font-size: 40px">welcome to</h1>
         <br>
@@ -13,16 +14,20 @@
     </div>
 
     <div>
+        <!-- website description -->
         <p>Rate and review your favorite (or least favorite) songs!</p>
+        <!-- displays login and register links if not logged in-->
         {% if not session.get("user_id") %}
             <a href="/login" class="btn">Login</a>
             <a href="/register" class="btn">Register</a>
         {% else %}
+        <!-- if logged in, displays profile link-->
             <a href="/profile" class="btn">Go to Profile</a>
         {% endif %}
     </div>
 
     <br>
+    <!-- error message displayed if something goes wrong-->
     {% if error_message %}
     <div class="alert alert-danger" role="alert">
         {{ error_message }}

@@ -6,6 +6,7 @@
     <br>
 
     {% if songs %}
+    <!-- if there are liked songs, create a table with song information -->
         <table class="table table-striped mt-4">
             <thead class="table-light">
                 <tr>
@@ -22,6 +23,7 @@
                     <td>{{ song.artist }}</td>
 
                     <td>
+                        <!-- Spotify embed for song -->
 
                         <iframe
                             src="https://open.spotify.com/embed/track/{{ song.spotify_id }}"
@@ -32,12 +34,13 @@
                             allow="encrypted-media">
                         </iframe>
                     </td>
-                    
+
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     {% else %}
+    <!-- if no liked songs, display message-->
         <p class="text-muted">You haven't liked any songs yet.</p>
     {% endif %}
 </div>
