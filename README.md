@@ -16,4 +16,4 @@ Below this introductory information, the user will see a row of stars and a text
 
 The navbar also includes a page for recent community reviews, which can be accessed by clicking on "Community Reviews" on the navbar. This page shows recent reviews from all members of the community. The reviews are organized into cards, each of which shows the song reviewed, the artist's name, the reviewer's username, the reviewer's written review and rating, and the timestamp at which the review was submitted.
 
-Once the user has logged their first review, they can return to their profile to see that they are able to unlike the song and edit or delete their review. 
+Once the user has logged their first review, they can return to their profile to see that they are able to unlike the song and edit or delete their review. Pressing the "Edit" button will bring the user to a page 
