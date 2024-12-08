@@ -386,13 +386,7 @@ def like_song():
         # If already liked, remove it from likes
         db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
         liked = False
-
-    # Return a JSON response with the updated like status
-     if request.is_xhr:  # If the request is an AJAX (XMLHttpRequest) request
-        return jsonify({"liked": liked})
-    else:
-        # Redirect back to the previous page or /profile
-        return redirect(request.referrer or "/profile")
+    return jsonify({"liked": liked}
 
 
 @app.route("/all_liked")
