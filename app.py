@@ -8,68 +8,80 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 from spotipy.cache_handler import CacheFileHandler
 
-# Configure Flask app
+# initialize Flask app
 app = Flask(__name__)
 
-# Configure session
+# configure session to use for storage
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Configure SQLite database
+# configures sql database with the four tables used throughout the code
 db = SQL("sqlite:///songs.db")
 
-# Set up an in-memory cache to avoid using a file
+# sets up a cache to avoid using a file
 cache_handler = spotipy.cache_handler.MemoryCacheHandler()
 
+# configures Spotify API with client credentials from Spotify dev dashboard
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
     client_id="88374e1393b6458790e3cf67005fc5a8",
     client_secret="570bec319d274b14a3048a93ad58bb16",
-    cache_handler=cache_handler  # This will disable file caching by using memory cache
+    cache_handler=cache_handler  # disables file caching by using memory cache
 ))
 
 def get_db_connection():
-    conn = sqlite3.connect('songs.db')  # Replace with your database path
-    conn.row_factory = sqlite3.Row  # Allows access to columns by name
+    conn = sqlite3.connect('songs.db')  # connects to songs.db
+    conn.row_factory = sqlite3.Row  # gives access to columns by name
     return conn
 
-# Homepage
+# renders homepage
 @app.route("/")
 def index():
     return render_template("index.html")
 
-# Login
+# login page -- allows users toenter their username and password and redirects to profile when finished
 @app.route("/login", methods=["GET", "POST"])
 def login():
+# handles user login
+    # retrieves user inputs to form
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
 
+        # validates user input
         if not username or not password:
             error_message = "Must provide both username and password."
             return render_template("login.html", error_message=error_message)
 
+        # queries the database for the user
         user = db.execute("SELECT * FROM users WHERE username = ?", username)
+
+        # checks if credentials are correct
         if len(user) != 1 or not check_password_hash(user[0]["hash"], password):
             error_message = "Invalid username or password."
             return render_template("login.html", error_message=error_message)
 
+        # stores user ID in session
         session["user_id"] = user[0]["id"]
+
+        # returns to the user's profile
         return redirect("/profile")
 
+    # for get requests, render login page
     return render_template("login.html")
 
-
+# registration page -- users can sign up for an account here
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    """Register user"""
-    # get form data using post method
+# register user
+
+    # retrieves user inputs using post method
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
         confirmation = request.form.get("confirmation")
 
-        # Check if all fields are provided
+        # validates input fields
         if not username:
             error_message = "Must provide a username."
             return render_template("register.html", error_message=error_message)
@@ -80,23 +92,23 @@ def register():
             error_message = "Must provide a confirmation."
             return render_template("register.html", error_message=error_message)
 
-        # Check if passwords match
+        # makes sure password confirmation matches
         if password != confirmation:
             error_message = "Passwords do not match."
             return render_template("register.html", error_message=error_message)
 
-        # Hash the password and try to insert the new user
+        # hashes the password and tries to insert the new user into users table
         try:
             hash_password = generate_password_hash(password)
             db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", username, hash_password)
 
-            # Get the user id from the database (after the insert)
+            # retrieves the user id from the database
             user = db.execute("SELECT * FROM users WHERE username = ?", username)
             if len(user) != 1:
                 error_message = "Something went wrong during registration."
                 return render_template("register.html", error_message=error_message)
 
-            # Store user_id in session to log them in
+            # stores user_id in session to log them in
             session["user_id"] = user[0]["id"]
 
         except ValueError:
