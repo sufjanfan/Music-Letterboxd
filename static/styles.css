@@ -196,11 +196,11 @@ header {
 }
 
 .iframe-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 10px 0;
+    text-align: center; /* Centers the iframe within the cell */
 }
+
 iframe {
-    max-width: 50%; /* Ensures the iframe width is reduced by 50% */
+    width: 100%; /* Makes the iframe fill the cell width */
+    height: 80px; /* Keeps a consistent height for the iframe */
+    border: 0; /* Removes unnecessary borders */
 }

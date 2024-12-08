@@ -12,8 +12,6 @@
                     <th scope="col">Song</th>
                     <th scope="col">Artist</th>
                     <th scope="col">Listen Now</th>
-                    <th scope="col">Unlike</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -23,23 +21,15 @@
                     <td>{{ song.artist }}</td>
 
                     <td>
-                        <div style="width: 50%;">
-                        <iframe
-                            src="https://open.spotify.com/embed/track/{{ song.spotify_id }}"
-                            width="100%"
-                            height="80"
-                            frameborder="0"
-                            allowtransparency="true"
-                            allow="encrypted-media">
-                        </iframe>
-                    </div>
+                        <div class="iframe-container">
+                            <iframe
+                                src="https://open.spotify.com/embed/track/{{ song.spotify_id }}"
+                                allowtransparency="true"
+                                allow="encrypted-media">
+                            </iframe>
+                        </div>
                     </td>
-                    <td>
-                        <form action="{{ url_for('like_song') }}" method="post">
-                            <input type="hidden" name="song_id" value="{{ song.spotify_id }}">
-                            <button type="submit" class="btn btn-danger btn-sm">Unlike</button>
-                        </form>
-                    </td>
+
                 </tr>
                 {% endfor %}
             </tbody>
