@@ -117,29 +117,29 @@ def register():
 
         return redirect("/profile")
 
-    # go to registration page/form for GET requests
+    # for get requests, render registration page
     else:
         return render_template("register.html")
 
-# Logout
+# logout route
 @app.route("/logout")
 def logout():
+    # clears the session
     session.clear()
     return redirect("/")
 
-# Profile
+# profile route
 @app.route("/profile")
 @login_required
 def profile():
-    # Get the user details (including the username) based on the session's user_id
+    # retrieve the user's details based on the session's user_id
     user = db.execute("SELECT * FROM users WHERE id = ?", (session["user_id"],))
 
-    # Check if a user is found
     if len(user) != 1:
         error_message = "Something went wrong during registration."
         return render_template("profile.html", error_message=error_message)
 
-    # Retrieve the username
+    # retrieve the username
     username = user[0]["username"]
 
     reviews = db.execute(

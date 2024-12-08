@@ -14,7 +14,7 @@ In order to start logging songs, the user should go to the song search page (/se
 
 Following the link to write the review brings the user to the song details (/song/<song_id>), since it provides details of a specific song in addition to a review section where users can submit their own reviews and ratings. We display the song title, artist, and album, in case the user would like to know, and there is an embedded Spotify player that allows the user to listen to the song without leaving the website. Users are able to identify their favorite songs through the "like" feature--liked songs are added to their own database, and there is also a webpage dedicated to showing all the songs the user liked. On the song details page, the song's liked status is checked, and users can toggle this (i.e., "like" or "unlike" the song). The like_song() function checks whether the song is already liked and toggles its status accordingly, which allows for songs to be removed from the liked list if the user unlikes them.
 
-The user can submit their 
+The user can log a review of the song using the form provide on the song details page. The 5-star selector makes it easy and intuitive to choose a rating, and we also gave the user the ability to write a note providing a review of the song. 
 Reviews are stored and displayed, and the average rating for the song is calculated.
 Like/Unlike Songs (/like):
 
