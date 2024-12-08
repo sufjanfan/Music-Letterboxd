@@ -1,3 +1,5 @@
+LINK TO PUBLIC GITHUB REPOSITORY: https://github.com/sufjanfan/Music-Letterboxd
+
 Welcome to Musicboxd!
 
 This website allows users to create an account that serves as their "music box", storing their ratings and reviews of any songs they log. The website can be launched by typing "flask run" into the terminal (once in the correct directory for the project) and following the link generated.
