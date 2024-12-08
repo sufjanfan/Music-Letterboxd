@@ -6,16 +6,18 @@
 
 {% block main %}
     <div class="container">
+        <!-- dynamically display user name as part of header -->
         <h1 class="syne">{{ name }}'s<br>music box</h1>
         <br>
         <hr>
 
-        <!-- Liked Songs -->
         <h2>Your Liked Songs</h2>
+        <!-- if liked songs exist, display them in a list -->
         {% if songs %}
             <ul>
                 {% for song in songs %}
-                    <li> <!--{{ song.name }} by {{ song.artist }}-->
+                <!-- loop through songs list to -->
+                    <li>
                         <iframe
                             src="https://open.spotify.com/embed/track/{{ song.spotify_id }}"
                             width="50%"
