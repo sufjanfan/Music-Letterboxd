@@ -5,15 +5,18 @@
 {% endblock %}
 
 {% block main %}
+    <!-- header -->
     <div class="container">
         <h1 class="syne">community<br>reviews</h1>
         <br>
 
-        <!-- User Reviews -->
+        <!-- user reviews section -->
+         <!-- if there are reviews, create a grid layout and display list of reveiws through a loop-->
         {% if reviews %}
             <div class="row row-cols-1 row-cols-md-3 g-4">
                 {% for review in reviews %}
                     <div class="col">
+                        <!-- puts review into cards along with relevant information -->
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">{{ review.song_title }} by {{ review.song_artist }}</h5>
@@ -26,6 +29,7 @@
                     </div>
                 {% endfor %}
             </div>
+        <!-- if no reviews exist yet, display-->
         {% else %}
             <p class="text-muted">No reviews yet.</p>
         {% endif %}
