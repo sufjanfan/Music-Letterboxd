@@ -388,7 +388,11 @@ def like_song():
         liked = False
 
     # Return a JSON response with the updated like status
-    return jsonify({"liked": liked})
+     if request.is_xhr:  # If the request is an AJAX (XMLHttpRequest) request
+        return jsonify({"liked": liked})
+    else:
+        # Redirect back to the previous page or /profile
+        return redirect(request.referrer or "/profile")
 
 
 @app.route("/all_liked")
