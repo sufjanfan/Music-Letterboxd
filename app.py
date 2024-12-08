@@ -7,12 +7,6 @@ import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 import sqlite3
 
-def get_db_connection():
-    conn = sqlite3.connect('songs.db')  # Replace with your database path
-    conn.row_factory = sqlite3.Row  # Allows access to columns by name
-    return conn
-
-
 # Configure Flask app
 app = Flask(__name__)
 
@@ -30,6 +24,11 @@ SPOTIPY_CLIENT_SECRET = "570bec319d274b14a3048a93ad58bb16"
 
 # Initialize Spotify client
 sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(client_id=SPOTIPY_CLIENT_ID, client_secret=SPOTIPY_CLIENT_SECRET))
+
+def get_db_connection():
+    conn = sqlite3.connect('songs.db')  # Replace with your database path
+    conn.row_factory = sqlite3.Row  # Allows access to columns by name
+    return conn
 
 # Homepage
 @app.route("/")
@@ -262,7 +261,11 @@ def song_details(song_id):
             # Re-fetch the reviews after insertion
             conn = get_db_connection()
             reviews = conn.execute(
-                "SELECT reviews.*, users.username FROM reviews JOIN users ON reviews.user_id = users.id WHERE song_id = ?",
+                """SELECT reviews.*, users.username FROM reviews
+                JOIN users ON reviews.user_id = users.id
+                WHERE song_id = ?
+                JOIN likes ON songs.id = likes.song_id
+                ORDER BY likes.timestamp DESC""",
                 (song_id,)
             ).fetchall()
             conn.close()
@@ -325,6 +328,8 @@ def recent():
         FROM reviews
         JOIN users ON reviews.user_id = users.id
         JOIN songs ON reviews.song_id = songs.id
+        JOIN likes ON songs.id = likes.song_id
+        ORDER BY likes.timestamp DESC
     """)
     return render_template("recent.html", reviews=reviews)
 
@@ -363,33 +368,38 @@ def like_song():
 @app.route("/like", methods=["POST"])
 @login_required
 def like_song():
-    song_id = request.form.get("song_id")
+    try:
+        song_id = request.form.get("song_id")
 
-    if not song_id:
-        return jsonify({"error": "Song ID required."}), 400
+        if not song_id:
+            return jsonify({"error": "Song ID required."}), 400
 
-    # Check if the song exists
-    song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
-    if not song:
-        return jsonify({"error": "Song not found."}), 404
+        # Check if the song exists
+        song = db.execute("SELECT id FROM songs WHERE id = ?", song_id)
+        if not song:
+            return jsonify({"error": "Song not found."}), 404
 
-    # Check if the song is already liked by the user
-    already_liked = db.execute(
-        "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
-        session["user_id"], song_id
-    )
+        # Check if the song is already liked by the user
+        already_liked = db.execute(
+            "SELECT * FROM likes WHERE user_id = ? AND song_id = ?",
+            session["user_id"], song_id
+        )
 
-    if len(already_liked) == 0:
-        # If not liked yet, add the song to likes
-        db.execute("INSERT INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
-        liked = True
-    else:
-        # If already liked, remove it from likes
-        db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
-        liked = False
+        if len(already_liked) == 0:
+            # If not liked yet, add the song to likes
+            db.execute("INSERT INTO likes (user_id, song_id) VALUES (?, ?)", session["user_id"], song_id)
+            liked = True
+        else:
+            # If already liked, remove it from likes
+            db.execute("DELETE FROM likes WHERE user_id = ? AND song_id = ?", session["user_id"], song_id)
+            liked = False
+        return jsonify({"liked": liked})
 
-    # Return a JSON response with the updated like status
-    return jsonify({"liked": liked})
+    except Exception as e:
+        # Log the error (optional) and return a generic error response
+        print(f"Error in like_song: {e}")
+        return jsonify({"error": "An error occurred while processing your request."}), 500
+
 
 
 @app.route("/all_liked")
