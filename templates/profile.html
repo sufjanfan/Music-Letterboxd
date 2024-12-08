@@ -15,7 +15,16 @@
         {% if songs %}
             <ul>
                 {% for song in songs %}
-                    <li>{{ song.name }} by {{ song.artist }}</li>
+                    <li> <!--{{ song.name }} by {{ song.artist }}-->
+                        <iframe
+                            src="https://open.spotify.com/embed/track/{{ song.id }}"
+                            width="50%"
+                            height="80"
+                            frameborder="0"
+                            allowtransparency="true"
+                            allow="encrypted-media">
+                        </iframe>
+
                     <!--
                     <form action="{{ url_for('like_song') }}" method="post" style="display:inline;">
                         <input type="hidden" name="song_id" value="{{ song.spotify_id }}">
@@ -26,7 +35,7 @@
         {% else %}
             <p>You haven't liked any songs yet.</p>
         {% endif %}
-        <a href="{{ url_for('all_liked') }}">View All Liked Songs</a>
+        <a href="{{ url_for('all_liked') }}" class="btn btn-primary">View All Liked Songs</a>
         <br>
         <hr>
 
