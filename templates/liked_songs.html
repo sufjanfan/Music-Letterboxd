@@ -12,7 +12,6 @@
                     <th scope="col">Song</th>
                     <th scope="col">Artist</th>
                     <th scope="col">Listen Now</th>
-                    <th scope="col">Unlike</th>
 
                 </tr>
             </thead>
@@ -33,12 +32,7 @@
                             allow="encrypted-media">
                         </iframe>
                     </td>
-                    <td>
-                        <form action="{{ url_for('like_song') }}" method="post">
-                            <input type="hidden" name="song_id" value="{{ song.spotify_id }}">
-                            <button type="submit" class="btn btn-danger btn-sm">Unlike</button>
-                        </form>
-                    </td>
+                    
                 </tr>
                 {% endfor %}
             </tbody>
