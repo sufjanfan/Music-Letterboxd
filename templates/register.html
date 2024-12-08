@@ -5,10 +5,11 @@
 {% endblock %}
 
 {% block main %}
+    <!-- header-->
     <div class="intro-container">
         <h1 class="syne">sign up</h1>
     </div>
-
+    <!-- allow user to submit registration form -->
     <form action="/register" method="post">
         <div class="mb-3">
             <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text">
@@ -24,6 +25,7 @@
 
 
     <br>
+    <!-- if registration is unsuccessful (as defined in backend), display error message-->
     {% if error_message %}
     <div class="alert alert-danger" role="alert">
         {{ error_message }}
